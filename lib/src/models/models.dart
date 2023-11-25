@@ -1,0 +1,9 @@
+export 'client.model.dart';
+export 'driver.model.dart';
+export 'expense.model.dart';
+export 'order.model.dart';
+export 'mini_payload.model.dart';
+export 'payload.model.dart';
+export 'setting.model.dart';
+export 'truck.model.dart';
+export 'user.model.dart';

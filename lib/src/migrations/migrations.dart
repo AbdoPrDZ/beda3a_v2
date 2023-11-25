@@ -1,0 +1,11 @@
+export 'user.migrate.dart';
+export 'driver.migrate.dart';
+export 'truck.migrate.dart';
+export 'client.migrate.dart';
+export 'payload.migrate.dart';
+export 'trip.migrate.dart';
+export 'order.migrate.dart';
+export 'order_payload.migrate.dart';
+export 'mini_payload.migrate.dart';
+export 'expense.migrate.dart';
+export 'setting.migrate.dart';
