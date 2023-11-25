@@ -14,16 +14,16 @@ abstract class Migration<CollectionT extends Collection> {
   List<Column> get columns;
 
   String get query {
-    String query = "CREATE TABLE $name (";
+    String query = "CREATE TABLE `$name` (";
     for (var i = 0; i < columns.length; i++) {
-      query += columns[i].query;
+      query += '\n  ${columns[i].query}';
       if (i < columns.length - 1) query += ', ';
     }
-    return "$query)";
+    return "$query\n)";
   }
 
   Future migrate() async {
-    dev.log(query);
+    dev.log('query: \n$query');
     await database.execute(query);
     for (var collection in setupCollections()) {
       await collection;

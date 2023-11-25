@@ -267,7 +267,7 @@ class Column {
       );
 
   String get query {
-    String query = "$name $type";
+    String query = "`$name` $type";
 
     if (length != null) query += "($length)";
 

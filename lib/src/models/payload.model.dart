@@ -119,8 +119,12 @@ class PayloadCollection extends Collection {
     this.addresses = addresses ?? this.addresses;
     this.details = details ?? this.details;
     this.images = images ?? this.images;
-    return PayloadModel.instance.updateRow(id, data);
+    return save();
   }
+
+  Future<int> save() => PayloadModel.instance.updateRow(id, data);
+
+  Future<int> delete() => PayloadModel.instance.deleteRow(id);
 
   @override
   Map<String, dynamic> get data => {

@@ -13,6 +13,8 @@ class AppDatabase {
   final String source;
   final List<Migration> migrations;
 
+  Database get database => Get.find();
+
   const AppDatabase(this.source, this.migrations);
 
   Future init({bool deleteIt = false}) async {
@@ -20,10 +22,10 @@ class AppDatabase {
     await openDatabase(
       source,
       version: 1,
-      onCreate: (database, v) {
+      onCreate: (database, v) async {
         Get.put(database);
         for (var migration in migrations) {
-          migration.migrate();
+          await migration.migrate();
         }
       },
     );

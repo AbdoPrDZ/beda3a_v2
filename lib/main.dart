@@ -77,6 +77,10 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => Get.find<DatabaseService>().update(),
               child: const Text('Update User'),
             ),
+            ElevatedButton(
+              onPressed: () => Get.find<DatabaseService>().delete(),
+              child: const Text('Delete User'),
+            ),
           ],
         ),
       ),

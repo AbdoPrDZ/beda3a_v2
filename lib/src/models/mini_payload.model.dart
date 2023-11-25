@@ -3,13 +3,13 @@ import 'dart:convert';
 import '../migrations/migrations.dart';
 import '../utils/utils.dart';
 
-class OrderPayloadModel extends Model {
+class MiniPayloadModel extends Model {
   @override
   Migration get migration => OrderPayloadMigration();
 
-  static OrderPayloadModel get instance => OrderPayloadModel();
+  static MiniPayloadModel get instance => MiniPayloadModel();
 
-  static Future<OrderPayloadCollection?> create({
+  static Future<MiniPayloadCollection?> create({
     int? id,
     required String name,
     required String receiverName,
@@ -39,7 +39,7 @@ class OrderPayloadModel extends Model {
       'created_at': '$createdAt',
     }));
     return _id != null
-        ? OrderPayloadCollection(
+        ? MiniPayloadCollection(
             _id,
             name,
             receiverName,
@@ -56,7 +56,7 @@ class OrderPayloadModel extends Model {
         : null;
   }
 
-  static Future<OrderPayloadCollection?> createFromMap(
+  static Future<MiniPayloadCollection?> createFromMap(
           Map<String, dynamic> data) =>
       create(
         name: data['name'],
@@ -78,16 +78,16 @@ class OrderPayloadModel extends Model {
             : null,
       );
 
-  static Future<List<OrderPayloadCollection>> all({int? limit}) async => [
+  static Future<List<MiniPayloadCollection>> all({int? limit}) async => [
         for (var coll in await instance.allRows(limit: limit))
-          OrderPayloadCollection.fromCollection(coll as Collection)
+          MiniPayloadCollection.fromCollection(coll as Collection)
       ];
 
-  static Future<OrderPayloadCollection?> find(int id) async =>
-      OrderPayloadCollection.fromCollectionNull(await instance.findRow(id));
+  static Future<MiniPayloadCollection?> find(int id) async =>
+      MiniPayloadCollection.fromCollectionNull(await instance.findRow(id));
 }
 
-class OrderPayloadCollection extends Collection {
+class MiniPayloadCollection extends Collection {
   final int id;
   String name;
   String receiverName;
@@ -101,7 +101,7 @@ class OrderPayloadCollection extends Collection {
   List images;
   final MDateTime createdAt;
 
-  OrderPayloadCollection(
+  MiniPayloadCollection(
     this.id,
     this.name,
     this.receiverName,
@@ -116,8 +116,8 @@ class OrderPayloadCollection extends Collection {
     this.createdAt,
   ) : super({});
 
-  static OrderPayloadCollection fromMap(Map<String, dynamic> data) =>
-      OrderPayloadCollection(
+  static MiniPayloadCollection fromMap(Map<String, dynamic> data) =>
+      MiniPayloadCollection(
         data['id'],
         data['name'],
         data['receiver_name'],
@@ -136,10 +136,10 @@ class OrderPayloadCollection extends Collection {
         MDateTime.fromString(data['created_at'])!,
       );
 
-  static OrderPayloadCollection fromCollection(Collection collection) =>
+  static MiniPayloadCollection fromCollection(Collection collection) =>
       fromMap(collection.data);
 
-  static OrderPayloadCollection? fromCollectionNull(Collection? collection) =>
+  static MiniPayloadCollection? fromCollectionNull(Collection? collection) =>
       collection != null ? fromMap(collection.data) : null;
 
   Future<int> update({
@@ -165,8 +165,12 @@ class OrderPayloadCollection extends Collection {
     this.dischargingAddress = dischargingAddress;
     this.details = details ?? this.details;
     this.images = images ?? this.images;
-    return OrderPayloadModel.instance.updateRow(id, data);
+    return save();
   }
+
+  Future<int> save() => MiniPayloadModel.instance.updateRow(id, data);
+
+  Future<int> delete() => MiniPayloadModel.instance.deleteRow(id);
 
   @override
   Map<String, dynamic> get data => {

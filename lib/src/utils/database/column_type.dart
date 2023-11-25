@@ -16,7 +16,7 @@ class ColumnType {
   static const ColumnType dateTime = ColumnType("DATETIME");
   static const ColumnType boolean = ColumnType("BOOLEAN");
   static ColumnType check(String colName, List<String> values) {
-    String type = "CHECK($colName IN (";
+    String type = "CHECK(`$colName` IN (";
 
     for (var i = 0; i < values.length; i++) {
       type += "'${values[i]}'";

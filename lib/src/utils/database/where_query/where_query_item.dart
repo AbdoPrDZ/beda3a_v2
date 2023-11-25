@@ -13,5 +13,5 @@ class WhereQueryItem<T> {
 
   @override
   String toString() =>
-      '$column $condition ${value == null ? 'NULL' : value is String ? "'$value'" : '$value'}';
+      '`$column` $condition ${value == null ? 'NULL' : value is String ? "'$value'" : '$value'}';
 }

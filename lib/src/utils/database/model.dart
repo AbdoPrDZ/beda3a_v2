@@ -21,27 +21,28 @@ abstract class Model {
   Database get database => migration.database;
 
   Future<int?> insert(Map<String, dynamic> data) {
-    String query = 'INSERT INTO $migration(';
+    String query = 'INSERT INTO `$migration` (';
     for (var i = 0; i < data.length; i++) {
       String key = data.keys.elementAt(i);
       if (data[key] != null) {
-        query += key;
+        query += '\n  `$key`';
         if (i < data.length - 1) query += ', ';
       }
     }
-    query += ') VALUES(';
+    query += '\n)\nVALUES (';
 
     for (var i = 0; i < data.length; i++) {
       String key = data.keys.elementAt(i);
       if (data[key] != null) {
-        query += data[key] is String ? "'${data[key]}'" : '${data[key]}';
+        query +=
+            '\n  ${data[key] is String ? "'${data[key]}'" : '${data[key]}'}';
         if (i < data.length - 1) query += ', ';
       }
     }
 
-    query += ')';
+    query += '\n)';
 
-    dev.log(query);
+    dev.log('query: \n$query');
     return database.transaction((transaction) => transaction.rawInsert(query));
   }
 
@@ -54,43 +55,39 @@ abstract class Model {
 
     if (columns.isNotEmpty) {
       for (var i = 0; i < columns.length; i++) {
-        query += columns[i];
+        query += '`${columns[i]}`';
         if (i < columns.length - 1) query += ', ';
       }
+      query += '\n';
     } else {
-      query += '*';
+      query += '* ';
     }
 
-    query += ' FROM $migration';
-    if (where != null) query += ' $where';
+    query += 'FROM `$migration`';
+    if (where != null) query += '\n$where';
 
-    if (limit != null) query += ' LIMIT $limit';
+    if (limit != null) query += '\nLIMIT $limit';
 
-    dev.log(query);
+    dev.log('query: \n$query');
     return database.rawQuery(query);
   }
 
-  Future<int> updateWhere(
-    Map<String, dynamic> data, {
-    WhereQuery? where,
-    // int? limit,
-  }) {
-    String query = 'UPDATE $migration SET ';
+  Future<int> updateWhere(Map<String, dynamic> data, {WhereQuery? where}) {
+    String query = 'UPDATE `$migration` SET ';
 
     for (var i = 0; i < data.length; i++) {
       String key = data.keys.elementAt(i);
       dynamic value = data[key];
 
       query +=
-          '$key = ${value == null ? 'NULL' : value is String ? "'$value'" : '$value'}';
+          '\n  `$key` = ${value == null ? 'NULL' : value is String ? "'$value'" : '$value'}';
 
       if (i < data.length - 1) query += ', ';
     }
 
-    if (where != null) query += '$where';
+    if (where != null) query += '\n$where';
 
-    // if (limit != null) query += ' LIMIT $limit';
-
+    dev.log('query: \n$query');
     return database.rawUpdate(query);
   }
 
@@ -103,11 +100,22 @@ abstract class Model {
             value: id,
           ),
         ]),
-        // limit: 1,
       );
 
-  Future<int> deleteRow(WhereQuery where) =>
-      database.rawDelete('DELETE FROM $migration $where');
+  Future<int> deleteWhere(WhereQuery where) {
+    String query = 'DELETE FROM `$migration`\n$where';
+    dev.log('query: \n$query');
+    return database.rawDelete(query);
+  }
+
+  Future<int> deleteRow(dynamic id) =>
+      deleteWhere(WhereQuery.fromWhereQueryItems([
+        WhereQueryItem(
+          column: '$index',
+          condition: WhereQueryCondition.equals,
+          value: id,
+        ),
+      ]));
 
   Future<List<Collection?>> allRows({int? limit}) async => [
         for (final item in await where(limit: limit)) Collection(item),

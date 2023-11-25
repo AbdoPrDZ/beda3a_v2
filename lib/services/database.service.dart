@@ -50,6 +50,8 @@ class DatabaseService extends GetxService {
 
     String databasesPath = await getDatabasesPath();
     appDatabase = AppDatabase('$databasesPath/source.db', migrations);
+    await appDatabase!.init(deleteIt: true);
+    database = appDatabase!.database;
   }
 
   showDatabases() async =>
@@ -68,14 +70,14 @@ class DatabaseService extends GetxService {
 
   find() async => dev.log('${await UserModel.find(2)}');
 
-  update() async {
-    UserCollection? user = await UserModel.find(2);
+  update() async => dev.log('update: ${await (await UserModel.find(2))?.update(
+        firstName: 'Abdo',
+        lastName: 'Pr',
+      )}, ${await UserModel.find(2)}');
 
-    dev.log('updae: ${await user?.update(
-      firstName: 'Abdo',
-      lastName: 'Pr',
-    )}, ${await UserModel.find(2)}');
-  }
+  delete() async => dev.log(
+        'delete: ${await UserModel.find(3)}',
+      );
 
   @override
   void onClose() {

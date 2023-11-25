@@ -81,8 +81,12 @@ class SettingCollection extends Collection {
   }) {
     this.name = name ?? this.name;
     this.value = value;
-    return SettingModel.instance.updateRow(id, data);
+    return save();
   }
+
+  Future<int> save() => SettingModel.instance.updateRow(id, data);
+
+  Future<int> delete() => SettingModel.instance.deleteRow(id);
 
   @override
   Map<String, dynamic> get data => {

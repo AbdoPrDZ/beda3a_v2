@@ -100,8 +100,12 @@ class ClientCollection extends Collection {
   }) {
     this.details = details ?? this.details;
     this.images = images ?? this.images;
-    return ClientModel.instance.updateRow(id, data);
+    return save();
   }
+
+  Future<int> save() => ClientModel.instance.updateRow(id, data);
+
+  Future<int> delete() => ClientModel.instance.deleteRow(id);
 
   @override
   Map<String, dynamic> get data => {

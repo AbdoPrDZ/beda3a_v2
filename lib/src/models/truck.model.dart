@@ -104,8 +104,12 @@ class TruckCollection extends Collection {
     this.driverId = driverId;
     this.details = details ?? this.details;
     this.images = images ?? this.images;
-    return TruckModel.instance.updateRow(id, data);
+    return save();
   }
+
+  Future<int> save() => TruckModel.instance.updateRow(id, data);
+
+  Future<int> delete() => TruckModel.instance.deleteRow(id);
 
   @override
   Map<String, dynamic> get data => {

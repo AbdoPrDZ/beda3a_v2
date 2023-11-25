@@ -150,8 +150,12 @@ class OrderCollection extends Collection {
     // this.dischargingAddress = dischargingAddress;
     this.details = details ?? this.details;
     this.images = images ?? this.images;
-    return OrderModel.instance.updateRow(id, data);
+    return save();
   }
+
+  Future<int> save() => OrderModel.instance.updateRow(id, data);
+
+  Future<int> delete() => OrderModel.instance.deleteRow(id);
 
   @override
   Map<String, dynamic> get data => {

@@ -100,8 +100,12 @@ class DriverCollection extends Collection {
   }) {
     this.details = details ?? this.details;
     this.images = images ?? this.images;
-    return DriverModel.instance.updateRow(id, data);
+    return save();
   }
+
+  Future<int> save() => DriverModel.instance.updateRow(id, data);
+
+  Future<int> delete() => DriverModel.instance.deleteRow(id);
 
   @override
   Map<String, dynamic> get data => {

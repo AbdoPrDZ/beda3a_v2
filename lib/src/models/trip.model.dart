@@ -3,13 +3,13 @@ import 'dart:convert';
 import '../migrations/migrations.dart';
 import '../utils/utils.dart';
 
-class DriverModel extends Model {
+class TripModel extends Model {
   @override
-  Migration get migration => DriverMigration();
+  Migration get migration => TripMigration();
 
-  static DriverModel get instance => DriverModel();
+  static TripModel get instance => TripModel();
 
-  static Future<DriverCollection?> create({
+  static Future<TripCollection?> create({
     int? id,
     required String from,
     required String to,
@@ -33,7 +33,7 @@ class DriverModel extends Model {
       'created_at': '$createdAt',
     }));
     return _id != null
-        ? DriverCollection(
+        ? TripCollection(
             _id,
             from,
             to,
@@ -47,7 +47,7 @@ class DriverModel extends Model {
         : null;
   }
 
-  static Future<DriverCollection?> createFromMap(Map<String, dynamic> data) =>
+  static Future<TripCollection?> createFromMap(Map<String, dynamic> data) =>
       create(
         from: data['from'],
         to: data['to'],
@@ -65,16 +65,16 @@ class DriverModel extends Model {
             : null,
       );
 
-  static Future<List<DriverCollection>> all({int? limit}) async => [
+  static Future<List<TripCollection>> all({int? limit}) async => [
         for (var coll in await instance.allRows(limit: limit))
-          DriverCollection.fromCollection(coll as Collection)
+          TripCollection.fromCollection(coll as Collection)
       ];
 
-  static Future<DriverCollection?> find(int id) async =>
-      DriverCollection.fromCollectionNull(await instance.findRow(id));
+  static Future<TripCollection?> find(int id) async =>
+      TripCollection.fromCollectionNull(await instance.findRow(id));
 }
 
-class DriverCollection extends Collection {
+class TripCollection extends Collection {
   final int id;
   String from;
   String to;
@@ -85,7 +85,7 @@ class DriverCollection extends Collection {
   List images;
   final MDateTime createdAt;
 
-  DriverCollection(
+  TripCollection(
     this.id,
     this.from,
     this.to,
@@ -97,8 +97,7 @@ class DriverCollection extends Collection {
     this.createdAt,
   ) : super({});
 
-  static DriverCollection fromMap(Map<String, dynamic> data) =>
-      DriverCollection(
+  static TripCollection fromMap(Map<String, dynamic> data) => TripCollection(
         data['id'],
         data['from'],
         data['to'],
@@ -110,10 +109,10 @@ class DriverCollection extends Collection {
         MDateTime.fromString(data['created_at'])!,
       );
 
-  static DriverCollection fromCollection(Collection collection) =>
+  static TripCollection fromCollection(Collection collection) =>
       fromMap(collection.data);
 
-  static DriverCollection? fromCollectionNull(Collection? collection) =>
+  static TripCollection? fromCollectionNull(Collection? collection) =>
       collection != null ? fromMap(collection.data) : null;
 
   Future<int> update({
@@ -132,8 +131,12 @@ class DriverCollection extends Collection {
     this.endAt = endAt;
     this.details = details ?? this.details;
     this.images = images ?? this.images;
-    return DriverModel.instance.updateRow(id, data);
+    return save();
   }
+
+  Future<int> save() => TripModel.instance.updateRow(id, data);
+
+  Future<int> delete() => TripModel.instance.deleteRow(id);
 
   @override
   Map<String, dynamic> get data => {

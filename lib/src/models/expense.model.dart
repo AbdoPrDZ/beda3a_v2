@@ -110,8 +110,12 @@ class ExpenseCollection extends Collection {
     this.cost = cost ?? this.cost;
     this.details = details ?? this.details;
     this.images = images ?? this.images;
-    return ExpenseModel.instance.updateRow(id, data);
+    return save();
   }
+
+  Future<int> save() => ExpenseModel.instance.updateRow(id, data);
+
+  Future<int> delete() => ExpenseModel.instance.deleteRow(id);
 
   @override
   Map<String, dynamic> get data => {
