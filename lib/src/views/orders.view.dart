@@ -2,7 +2,6 @@ import 'package:gap/gap.dart';
 
 import '../consts/costs.dart';
 import '../models/models.dart';
-import '../utils/utils.dart';
 import 'views.dart';
 
 class OrdersView extends StatelessWidget {

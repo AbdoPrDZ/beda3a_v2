@@ -2,6 +2,10 @@
 
 A new Flutter project for Beda3a App this version uses sqlite to manage and store data.
 
+<p align="center">
+  <img src="assets/images/beda3a-1.png" width="50%" alt="Beda3a">
+</p>
+
 # Whats new
 
 - I create new stricture to manage database easy and useful in `lib/src/utils/database`:
