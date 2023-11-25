@@ -14,10 +14,6 @@ class OrderModel extends Model {
     int? id,
     required int fromClientId,
     required int toClientId,
-    // MDateTime? chargingDate,
-    // String? chargingAddress,
-    // MDateTime? dischargingDate,
-    // String? dischargingAddress,
     Map? details,
     List? images,
     MDateTime? createdAt,
@@ -27,10 +23,6 @@ class OrderModel extends Model {
       'id': id,
       'from_client_id': fromClientId,
       'to_client_id': toClientId,
-      // 'charging_date': chargingDate?.toString(),
-      // 'charging_address': chargingAddress,
-      // 'discharging_date': dischargingDate?.toString(),
-      // 'discharging_address': dischargingAddress,
       'details': details,
       'images': images,
       'created_at': '$createdAt',
@@ -40,10 +32,6 @@ class OrderModel extends Model {
             _id,
             fromClientId,
             toClientId,
-            // chargingDate,
-            // chargingAddress,
-            // dischargingDate,
-            // dischargingAddress,
             details ?? {},
             images ?? [],
             createdAt,
@@ -55,14 +43,6 @@ class OrderModel extends Model {
       create(
         fromClientId: data['from_client_id'],
         toClientId: data['to_client_id'],
-        // chargingDate: data['charging_date'] != null
-        //     ? MDateTime.fromString(data['charging_date'])!
-        //     : null,
-        // chargingAddress: data['charging_address'],
-        // dischargingDate: data['discharging_date'] != null
-        //     ? MDateTime.fromString(data['discharging_date'])!
-        //     : null,
-        // dischargingAddress: data['discharging_address'],
         details: data['details'] != null ? jsonDecode(data['details']) : null,
         images: data['images'] != null ? jsonDecode(data['images']) : null,
         createdAt: data['created_at'] != null
@@ -83,10 +63,6 @@ class OrderCollection extends Collection {
   final int id;
   int fromClientId;
   int toClientId;
-  // MDateTime? chargingDate;
-  // String? chargingAddress;
-  // MDateTime? dischargingDate;
-  // String? dischargingAddress;
   Map details;
   List images;
   final MDateTime createdAt;
@@ -95,10 +71,6 @@ class OrderCollection extends Collection {
     this.id,
     this.fromClientId,
     this.toClientId,
-    // this.chargingDate,
-    // this.chargingAddress,
-    // this.dischargingDate,
-    // this.dischargingAddress,
     this.details,
     this.images,
     this.createdAt,
@@ -113,14 +85,6 @@ class OrderCollection extends Collection {
         data['id'],
         data['from_client_id'],
         data['to_client_id'],
-        // data['charging_date'] != null
-        //     ? MDateTime.fromString(data['charging_date'])!
-        //     : null,
-        // data['charging_address'],
-        // data['discharging_date'] != null
-        //     ? MDateTime.fromString(data['discharging_date'])!
-        //     : null,
-        // data['discharging_address'],
         jsonDecode(data['details']),
         jsonDecode(data['images']),
         MDateTime.fromString(data['created_at'])!,
@@ -135,19 +99,11 @@ class OrderCollection extends Collection {
   Future<int> update({
     int? fromClientId,
     int? toClientId,
-    // MDateTime? chargingDate,
-    // String? chargingAddress,
-    // MDateTime? dischargingDate,
-    // String? dischargingAddress,
     Map? details,
     List? images,
   }) {
     this.fromClientId = fromClientId ?? this.fromClientId;
     this.toClientId = toClientId ?? this.toClientId;
-    // this.chargingDate = chargingDate;
-    // this.chargingAddress = chargingAddress;
-    // this.dischargingDate = dischargingDate;
-    // this.dischargingAddress = dischargingAddress;
     this.details = details ?? this.details;
     this.images = images ?? this.images;
     return save();
@@ -162,10 +118,6 @@ class OrderCollection extends Collection {
         'id': id,
         'from_client_id': fromClientId,
         'to_client_id': toClientId,
-        // 'charging_date': chargingDate?.toString(),
-        // 'charging_address': chargingAddress,
-        // 'discharging_date': dischargingDate?.toString(),
-        // 'discharging_address': dischargingAddress,
         'details': jsonEncode(details),
         'images': jsonEncode(images),
         'created_at': '$createdAt',

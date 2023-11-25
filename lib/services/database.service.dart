@@ -32,21 +32,6 @@ class DatabaseService extends GetxService {
     if (database != null) {
       throw Exception("The database is already initialized");
     }
-    // String databasesPath = await getDatabasesPath();
-    // await deleteDatabase('$databasesPath/source.db');
-    // database = await openDatabase(
-    //   '$databasesPath/source.db',
-    //   version: 1,
-    //   onCreate: (db, v) {
-    //     Get.put(db);
-
-    //     for (var migration in migrations) {
-    //       migration.migrate();
-    //     }
-    //   },
-    // );
-
-    // database = await openDatabase('C:/Users/abdo_pr/Documents/source.db');
 
     String databasesPath = await getDatabasesPath();
     appDatabase = AppDatabase('$databasesPath/source.db', migrations);
