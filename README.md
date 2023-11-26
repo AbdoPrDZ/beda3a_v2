@@ -20,3 +20,9 @@ A new Flutter project for Beda3a App this version uses sqlite to manage and stor
     - `where_query/where_query_merge.dart`: merge types (and, or) to merge conditions.
   - `database/model.dart`: create table manager to insert, update and delete data.
   - `database/collections.dart`: manage table items (rows) (save, update, delete).
+
+# Diagram:
+
+<p align="center">
+  <img src="screanshots/diagram.png" width="90%" alt="Beda3a Diagram">
+</p>

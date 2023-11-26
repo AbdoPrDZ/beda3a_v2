@@ -8,5 +8,5 @@ class PageInfo {
   const PageInfo(this.route, this.page, {this.isUnAuth = false});
 
   @override
-  operator ==(Object object) => object is String && object == route;
+  operator ==(Object other) => other is String && other == route;
 }

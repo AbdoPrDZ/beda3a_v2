@@ -14,8 +14,9 @@ class UserModel extends Model {
     required String firstName,
     required String lastName,
     required String phone,
-    required String email,
-    required String address,
+    String? email,
+    String? address,
+    String? company,
     required String gender,
     Map? details,
     List? images,
@@ -29,6 +30,7 @@ class UserModel extends Model {
       'phone': phone,
       'email': email,
       'address': address,
+      'company': company,
       'gender': gender,
       'details': details,
       'images': images,
@@ -42,6 +44,7 @@ class UserModel extends Model {
             phone,
             email,
             address,
+            company,
             gender,
             details ?? {},
             images ?? [],
@@ -57,6 +60,7 @@ class UserModel extends Model {
         phone: data['phone'],
         email: data['email'],
         address: data['address'],
+        company: data['company'],
         gender: data['gender'],
         details: data['details'] != null ? jsonDecode(data['details']) : null,
         images: data['images'] != null ? jsonDecode(data['images']) : null,
@@ -79,8 +83,9 @@ class UserCollection extends Collection {
   String firstName;
   String lastName;
   String phone;
-  String email;
-  String address;
+  String? email;
+  String? address;
+  String? company;
   String gender;
   Map details;
   List images;
@@ -93,6 +98,7 @@ class UserCollection extends Collection {
     this.phone,
     this.email,
     this.address,
+    this.company,
     this.gender,
     this.details,
     this.images,
@@ -106,6 +112,7 @@ class UserCollection extends Collection {
         data['phone'],
         data['email'],
         data['address'],
+        data['company'],
         data['gender'],
         jsonDecode(data['details']),
         jsonDecode(data['images']),
@@ -124,6 +131,7 @@ class UserCollection extends Collection {
     String? phone,
     String? email,
     String? address,
+    String? company,
     String? gender,
     Map? details,
     List? images,
@@ -131,8 +139,9 @@ class UserCollection extends Collection {
     this.firstName = firstName ?? this.firstName;
     this.lastName = lastName ?? this.lastName;
     this.phone = phone ?? this.phone;
-    this.email = email ?? this.email;
-    this.address = address ?? this.address;
+    this.email = email;
+    this.address = address;
+    this.company = company;
     this.gender = gender ?? this.gender;
     this.details = details ?? this.details;
     this.images = images ?? this.images;
@@ -151,6 +160,7 @@ class UserCollection extends Collection {
         'phone': phone,
         'email': email,
         'address': address,
+        'company': company,
         'gender': gender,
         'details': jsonEncode(details),
         'images': jsonEncode(images),

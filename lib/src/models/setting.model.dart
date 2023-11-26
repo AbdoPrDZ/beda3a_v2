@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../migrations/migrations.dart';
 import '../utils/utils.dart';
 
@@ -7,27 +9,18 @@ class SettingModel extends Model {
 
   static SettingModel get instance => SettingModel();
 
-  static Future<SettingCollection?> create({
-    int? id,
+  static Future<SettingCollection<T>> create<T>({
     required String name,
-    String? value,
+    T? value,
     MDateTime? createdAt,
   }) async {
-    createdAt = createdAt ?? MDateTime.now();
-    int? _id = await instance.createRow(Collection({
-      'id': id,
-      'name': name,
-      'value': value,
-      'created_at': '$createdAt',
-    }));
-    return _id != null
-        ? SettingCollection(
-            _id,
-            name,
-            value,
-            createdAt,
-          )
-        : null;
+    final coll = SettingCollection<T>(
+      name,
+      value,
+      createdAt ?? MDateTime.now(),
+    );
+    await instance.createRow(coll);
+    return coll;
   }
 
   static Future<SettingCollection?> createFromMap(Map<String, dynamic> data) =>
@@ -44,55 +37,51 @@ class SettingModel extends Model {
           SettingCollection.fromCollection(coll as Collection)
       ];
 
-  static Future<SettingCollection?> find(int id) async =>
-      SettingCollection.fromCollectionNull(await instance.findRow(id));
+  static Future<SettingCollection<T>?> find<T>(String name) async =>
+      SettingCollection.fromCollectionNull<T>(await instance.findRow(name));
 }
 
-class SettingCollection extends Collection {
-  final int id;
+class SettingCollection<T> extends Collection {
   String name;
-  String? value;
+  T? value;
   final MDateTime createdAt;
 
   SettingCollection(
-    this.id,
     this.name,
     this.value,
     this.createdAt,
   ) : super({});
 
-  static SettingCollection fromMap(Map<String, dynamic> data) =>
+  static SettingCollection<T> fromMap<T>(Map<String, dynamic> data) =>
       SettingCollection(
-        data['id'],
         data['name'],
-        data['value'],
+        data['value'] != null ? jsonDecode(data['value']) as T? : null,
         MDateTime.fromString(data['created_at'])!,
       );
 
-  static SettingCollection fromCollection(Collection collection) =>
-      fromMap(collection.data);
+  static SettingCollection<T> fromCollection<T>(Collection collection) =>
+      fromMap<T>(collection.data);
 
-  static SettingCollection? fromCollectionNull(Collection? collection) =>
-      collection != null ? fromMap(collection.data) : null;
+  static SettingCollection<T>? fromCollectionNull<T>(Collection? collection) =>
+      collection != null ? fromMap<T>(collection.data) : null;
 
   Future<int> update({
     String? name,
-    String? value,
+    T? value,
   }) {
     this.name = name ?? this.name;
     this.value = value;
     return save();
   }
 
-  Future<int> save() => SettingModel.instance.updateRow(id, data);
+  Future<int> save() => SettingModel.instance.updateRow(name, data);
 
-  Future<int> delete() => SettingModel.instance.deleteRow(id);
+  Future<int> delete() => SettingModel.instance.deleteRow(name);
 
   @override
   Map<String, dynamic> get data => {
-        'id': id,
         'name': name,
-        'value': value,
+        'value': value != null ? jsonEncode(value!) : null,
         'created_at': '$createdAt',
       };
 

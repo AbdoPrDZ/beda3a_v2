@@ -165,6 +165,8 @@ class UIThemeMode {
   static const UIThemeMode dark = UIThemeMode("Dark");
   static const UIThemeMode light = UIThemeMode("Light");
 
+  static UIThemeMode fromString(String mode) => dark == mode ? dark : light;
+
   bool get isDark => mode == dark.mode;
   bool get isLight => mode == light.mode;
 
@@ -172,7 +174,7 @@ class UIThemeMode {
   String toString() => mode;
 
   @override
-  bool operator ==(dynamic other) {
-    return (other is UIThemeMode) && (other).mode == mode;
-  }
+  bool operator ==(dynamic other) =>
+      ((other is UIThemeMode) && (other).mode == mode) ||
+      ((other is String) && other == mode);
 }

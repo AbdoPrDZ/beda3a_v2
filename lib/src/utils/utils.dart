@@ -5,6 +5,7 @@ export 'm_datetime.dart';
 export 'size_config.dart';
 export 'route_manager.dart';
 export 'page_info.dart';
+export 'page.dart';
 
 String jsonEncode(Object object) =>
     const JsonEncoder.withIndent('  ').convert(object);

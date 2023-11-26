@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../../middlewares/auth.middleware.dart';
 import '../../services/main.service.dart';
 import 'page_info.dart';
 
@@ -34,7 +35,7 @@ class RouteManager {
         GetPage(
           name: pageInfo.route,
           page: pageInfo.page,
-          // middlewares: [AuthMiddleware()],
+          middlewares: [AuthMiddleware()],
           title: pageInfo.page().pageHeaders.title,
           participatesInRootNavigator:
               pageInfo.page().pageHeaders.participatesInRootNavigator,
