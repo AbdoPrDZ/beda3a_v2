@@ -23,8 +23,8 @@ class LoginController extends GetxController {
   }
 
   login() async {
-    if (emailPhoneController.text != mainService.realUser!.email &&
-        emailPhoneController.text != mainService.realUser!.phone) {
+    if (emailPhoneController.text != (await mainService.realUser)!.email &&
+        emailPhoneController.text != (await mainService.realUser)!.phone) {
       errors['email_phone'] = 'Invalid email or phone';
     } else if (passwordController.text != mainService.userSetting!.password) {
       // } else if (Password.verify(

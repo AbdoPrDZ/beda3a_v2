@@ -11,16 +11,14 @@ class AuthMiddleware extends GetMiddleware {
 
     MainService mainService = Get.find();
 
-    if (mainService.realUser == null &&
+    if (mainService.unHaveUser &&
         route != PagesInfo.onUnHaveUser.route &&
         !PagesInfo.unHaveUserPages.contains(route)) {
       return RouteSettings(name: PagesInfo.onUnHaveUser.route);
     } else if (mainService.isAuth && PagesInfo.unAuthPages.contains(route)) {
       return RouteSettings(name: PagesInfo.onAuthPage.route);
     } else if (!mainService.isAuth && !PagesInfo.unAuthPages.contains(route)) {
-      return RouteSettings(
-        name: PagesInfo.onUnAuth.route,
-      );
+      return RouteSettings(name: PagesInfo.onUnAuth.route);
     }
 
     return null;

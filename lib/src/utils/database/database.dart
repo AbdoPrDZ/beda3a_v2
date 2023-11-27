@@ -19,7 +19,7 @@ class AppDatabase {
 
   Future init({bool deleteIt = false}) async {
     if (deleteIt) await deleteDatabase(source);
-    await openDatabase(
+    Get.put(await openDatabase(
       source,
       version: 1,
       onCreate: (database, v) async {
@@ -28,6 +28,6 @@ class AppDatabase {
           await migration.migrate();
         }
       },
-    );
+    ));
   }
 }

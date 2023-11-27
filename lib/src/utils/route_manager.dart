@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 import '../../middlewares/auth.middleware.dart';
 import '../../services/main.service.dart';
+import '../consts/costs.dart';
 import 'page_info.dart';
 
 class RouteManager {
@@ -30,7 +31,7 @@ class RouteManager {
 
   static List<GetPage> get pages {
     List<GetPage> pages = [];
-    for (PageInfo pageInfo in MainService.pages.values) {
+    for (PageInfo pageInfo in PagesInfo.pages.values) {
       pages.add(
         GetPage(
           name: pageInfo.route,

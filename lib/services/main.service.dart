@@ -1,9 +1,8 @@
-import 'package:beda3a_v2/src/utils/m_datetime.dart';
 import 'package:get/get.dart';
 
 import '../src/consts/costs.dart';
 import '../src/models/models.dart';
-import '../src/utils/page_info.dart';
+import '../src/utils/utils.dart';
 import 'database.service.dart';
 
 class UserSetting extends SettingCollection<Map> {
@@ -28,8 +27,19 @@ class UserSetting extends SettingCollection<Map> {
   Future<UserCollection?>? get realUser =>
       userId != null ? UserModel.find(userId!) : null;
 
+  @override
+  Future<int> save() {
+    value = {
+      'user_id': userId,
+      'password': password,
+      'is_auth': isAuth,
+      'theme_mode': '$themeMode',
+    };
+    return super.save();
+  }
+
   static UserSetting fromMap(Map data, MDateTime createdAt) => UserSetting(
-        data['userId'],
+        data['user_id'],
         data['password'],
         data['is_auth'],
         UIThemeMode.fromString(data['theme_mode']),
@@ -37,17 +47,16 @@ class UserSetting extends SettingCollection<Map> {
       );
 
   static UserSetting fromCollection(SettingCollection<Map> collection) =>
-      fromMap(collection.data, collection.createdAt);
+      fromMap(collection.value!, collection.createdAt);
 
   static Future<UserSetting> load() async =>
       UserSetting.fromCollection((await SettingModel.find('user'))!);
 }
 
 class MainService extends GetxService {
-  static Map<String, PageInfo> get pages => {};
-
   UserSetting? userSetting;
-  UserCollection? realUser;
+  Future<UserCollection?>? get realUser => userSetting?.realUser;
+  bool get unHaveUser => userSetting?.userId == null;
   bool get isAuth => userSetting != null ? userSetting!.isAuth : false;
 
   UIThemeMode get themeMode =>
@@ -57,6 +66,7 @@ class MainService extends GetxService {
     DatabaseService databaseService = Get.put(DatabaseService());
     await databaseService.initDatabase();
     userSetting = await UserSetting.load();
+    print(userSetting);
   }
 
   PageInfo next() {
@@ -69,8 +79,8 @@ class MainService extends GetxService {
     }
   }
 
-  Future setupUser(int userId, String password) {
-    userSetting!.userId = userId;
+  Future setupUser(UserCollection user, String password) {
+    userSetting!.userId = user.id;
     userSetting!.password = password;
     userSetting!.isAuth = true;
     return userSetting!.save();
@@ -81,8 +91,9 @@ class MainService extends GetxService {
     return userSetting!.save();
   }
 
-  Future logout() {
+  Future logout() async {
     userSetting!.isAuth = false;
-    return userSetting!.save();
+    await userSetting!.save();
+    RouteManager.to(PagesInfo.login, clearHeaders: true);
   }
 }

@@ -9,7 +9,7 @@ class PagesInfo {
             PageInfo(LoginPage.name, () => LoginPage(), isUnAuth: true),
         SetupUserPage.name:
             PageInfo(SetupUserPage.name, () => SetupUserPage(), isUnAuth: true),
-        HomePage.name: PageInfo(LoginPage.name, () => HomePage())
+        HomePage.name: PageInfo(HomePage.name, () => HomePage())
       };
 
   static List<String> get unAuthPages => [

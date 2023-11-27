@@ -16,11 +16,18 @@ class HomePage extends utils.Page<HomeController> {
   @override
   PreferredSizeWidget? buildAppBar(BuildContext context) => AppBar(
         backgroundColor: UIThemeColors.primary,
-        title: const Text('Login'),
+        title: Text(
+          'Home',
+          style: TextStyle(color: UIThemeColors.text5),
+        ),
       );
 
   @override
-  Widget buildBody(BuildContext context) => Center(
-        child: Text('Home'),
+  Widget buildBody(BuildContext context) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('User: ${controller.user}'),
+          ButtonView.text(onPressed: controller.logout, text: 'Logout')
+        ],
       );
 }

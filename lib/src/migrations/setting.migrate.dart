@@ -20,6 +20,7 @@ class SettingMigration extends Migration<SettingCollection> {
           'user_id': null,
           'is_auth': false,
           'password': null,
+          'theme_mode': 'light',
         }),
       ];
 }

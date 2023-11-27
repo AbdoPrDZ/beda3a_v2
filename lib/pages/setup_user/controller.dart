@@ -57,7 +57,7 @@ class SetupUserController extends GetxController {
       ))!;
 
       try {
-        await mainService.setupUser(user.id, passwordController.text);
+        await mainService.setupUser(user, passwordController.text);
         formKey.currentState!.save();
 
         Get.back();

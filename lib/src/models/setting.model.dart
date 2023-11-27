@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:convert' as convert;
 
 import '../migrations/migrations.dart';
 import '../utils/utils.dart';
@@ -6,6 +6,9 @@ import '../utils/utils.dart';
 class SettingModel extends Model {
   @override
   Migration get migration => SettingMigration();
+
+  @override
+  Column get index => Column.string('name');
 
   static SettingModel get instance => SettingModel();
 
@@ -55,7 +58,7 @@ class SettingCollection<T> extends Collection {
   static SettingCollection<T> fromMap<T>(Map<String, dynamic> data) =>
       SettingCollection(
         data['name'],
-        data['value'] != null ? jsonDecode(data['value']) as T? : null,
+        data['value'] != null ? convert.jsonDecode(data['value']) as T? : null,
         MDateTime.fromString(data['created_at'])!,
       );
 
@@ -74,14 +77,16 @@ class SettingCollection<T> extends Collection {
     return save();
   }
 
-  Future<int> save() => SettingModel.instance.updateRow(name, data);
+  Future<int> save() {
+    return SettingModel.instance.updateRow(name, data);
+  }
 
   Future<int> delete() => SettingModel.instance.deleteRow(name);
 
   @override
   Map<String, dynamic> get data => {
         'name': name,
-        'value': value != null ? jsonEncode(value!) : null,
+        'value': value != null ? convert.jsonEncode(value!) : null,
         'created_at': '$createdAt',
       };
 
