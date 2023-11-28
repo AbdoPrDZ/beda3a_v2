@@ -69,6 +69,9 @@ class UserModel extends Model {
             : null,
       );
 
+  static Future<UserCollection?> createFromCollection(UserCollection user) =>
+      createFromMap(user.data);
+
   static Future<List<UserCollection>> all({int? limit}) async => [
         for (var coll in await instance.allRows(limit: limit))
           UserCollection.fromCollection(coll as Collection)

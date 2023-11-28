@@ -11,7 +11,9 @@ class PagesInfo {
             PageInfo(SetupUserPage.name, () => SetupUserPage(), isUnAuth: true),
         HomePage.name: PageInfo(HomePage.name, () => HomePage()),
         CreateEditTruckPage.name:
-            PageInfo(CreateEditTruckPage.name, () => CreateEditTruckPage())
+            PageInfo(CreateEditTruckPage.name, () => CreateEditTruckPage()),
+        CreateEditDriverPage.name:
+            PageInfo(CreateEditDriverPage.name, () => CreateEditDriverPage()),
       };
 
   static List<String> get unAuthPages => [
@@ -26,6 +28,7 @@ class PagesInfo {
   static PageInfo get login => pages[LoginPage.name]!;
   static PageInfo get home => pages[HomePage.name]!;
   static PageInfo get createEditTruck => pages[CreateEditTruckPage.name]!;
+  static PageInfo get createEditDriver => pages[CreateEditDriverPage.name]!;
 
   static PageInfo initialPage = loading;
   static PageInfo onAuthPage = home;

@@ -18,8 +18,9 @@ class CreateEditTruckController extends GetxController {
 
   int? truckId;
   TextEditController nameController = TextEditController(
-      // name: 'truck_name'
-      );
+    // name: 'truck_name'
+    text: 'Official Truck',
+  );
   // List<DriverModel> drivers = [];
   // DriverId? driverId;
   // List<ExpensesModel> expenses = [];

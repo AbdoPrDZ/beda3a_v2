@@ -67,47 +67,6 @@ class HomeTab extends utils.Page<HomeTabController> {
               ),
             ],
           ),
-          ButtonView.text(
-            margin: const EdgeInsets.only(top: 20, bottom: 5),
-            backgroundColor: UIColors.success,
-            onPressed: controller.createTruck,
-            text: 'Create Truck',
-          ),
-          Container(
-            height: 200,
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            decoration: BoxDecoration(
-              color: UIThemeColors.cardBg,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: SingleChildScrollView(
-              child: StreamBuilder(
-                stream: controller.trucks.stream,
-                builder: (context, snapshot) => Text(
-                  'Trucks: ${snapshot.data ?? []}',
-                  style: TextStyle(
-                    color: UIThemeColors.text2,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Obx(
-            () => ButtonView.text(
-              margin: const EdgeInsets.only(top: 5),
-              backgroundColor: UIColors.warning,
-              onPressed:
-                  controller.trucks.isNotEmpty ? controller.editTruck : null,
-              text: 'Edit Trucks',
-            ),
-          ),
-          ButtonView.text(
-            margin: const EdgeInsets.only(top: 5),
-            backgroundColor: UIColors.danger,
-            onPressed: controller.clearTrucks,
-            text: 'Clear Trucks',
-          ),
         ],
       );
 }

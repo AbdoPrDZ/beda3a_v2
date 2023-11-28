@@ -13,7 +13,6 @@ class DriverModel extends Model {
   static Future<DriverCollection?> create({
     int? id,
     required int userId,
-    // required String username,
     Map? details,
     List? images,
     MDateTime? createdAt,
@@ -23,8 +22,8 @@ class DriverModel extends Model {
       'id': id,
       'user_id': userId,
       // 'username': username,
-      'details': details,
-      'images': images,
+      'details': details != null ? jsonEncode(details) : null,
+      'images': images != null ? jsonEncode(images) : null,
       'created_at': '$createdAt',
     }));
     return _id != null
@@ -37,6 +36,44 @@ class DriverModel extends Model {
             createdAt,
           )
         : null;
+  }
+
+  static Future<CreateEditResult<DriverCollection?>> createWithUser({
+    int? id,
+    int? userId,
+    required String firstName,
+    required String lastName,
+    required String phone,
+    String? email,
+    String? address,
+    String? company,
+    required String gender,
+    Map? details,
+    List? images,
+    MDateTime? createdAt,
+  }) async {
+    createdAt = createdAt ?? MDateTime.now();
+    UserCollection _user = (await UserModel.create(
+      id: userId,
+      firstName: firstName,
+      lastName: lastName,
+      phone: phone,
+      email: email,
+      gender: gender,
+      address: address,
+      company: company,
+      createdAt: createdAt,
+    ))!;
+    return CreateEditResult(
+      true,
+      result: await create(
+        id: id,
+        userId: _user.id,
+        details: details,
+        images: images,
+        createdAt: createdAt,
+      ),
+    );
   }
 
   static Future<DriverCollection?> createFromMap(Map<String, dynamic> data) =>
@@ -57,6 +94,8 @@ class DriverModel extends Model {
 
   static Future<DriverCollection?> find(int id) async =>
       DriverCollection.fromCollectionNull(await instance.findRow(id));
+
+  static Future clear() async => instance.deleteWhere();
 }
 
 class DriverCollection extends Collection {
@@ -94,13 +133,29 @@ class DriverCollection extends Collection {
   static DriverCollection? fromCollectionNull(Collection? collection) =>
       collection != null ? fromMap(collection.data) : null;
 
-  Future<int> update({
+  Future<CreateEditResult<int>> update({
+    String? firstName,
+    String? lastName,
+    String? phone,
+    String? email,
+    String? address,
+    String? company,
+    String? gender,
     Map? details,
     List? images,
-  }) {
+  }) async {
+    await (await user).update(
+      firstName: firstName,
+      lastName: lastName,
+      phone: phone,
+      email: email,
+      address: address,
+      company: company,
+      gender: gender,
+    );
     this.details = details ?? this.details;
     this.images = images ?? this.images;
-    return save();
+    return CreateEditResult(true, result: await save());
   }
 
   Future<int> save() => DriverModel.instance.updateRow(id, data);
