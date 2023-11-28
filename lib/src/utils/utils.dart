@@ -6,6 +6,8 @@ export 'size_config.dart';
 export 'route_manager.dart';
 export 'page_info.dart';
 export 'page.dart';
+export 'create_edit_page_data.dart';
+export 'create_edit_model_result.dart';
 
 String jsonEncode(Object object) =>
     const JsonEncoder.withIndent('  ').convert(object);

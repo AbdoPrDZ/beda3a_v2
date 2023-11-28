@@ -1,4 +1,3 @@
-import '../consts/costs.dart';
 import '../models/models.dart';
 import '../utils/utils.dart';
 
@@ -21,8 +20,8 @@ class UserMigration extends Migration<UserCollection> {
         Column.dateTime('created_at').autoIncrement(),
       ];
 
-  @override
-  List<Future<UserCollection?>> setupCollections() => [
-        for (var item in Fakes.fakeUsers) UserModel.createFromMap(item),
-      ];
+  // @override
+  // List<Future<UserCollection?>> setupCollections() => [
+  //       for (var item in Fakes.fakeUsers) UserModel.createFromMap(item),
+  //     ];
 }

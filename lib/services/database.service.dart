@@ -26,7 +26,7 @@ class DatabaseService extends GetxService {
   initDatabase() async {
     String databasesPath = await getDatabasesPath();
     appDatabase = AppDatabase('$databasesPath/source.db', migrations);
-    await appDatabase!.init(deleteIt: true);
+    await appDatabase!.init(deleteIt: false);
     database = appDatabase!.database;
   }
 

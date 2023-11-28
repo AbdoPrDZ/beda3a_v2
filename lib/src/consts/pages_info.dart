@@ -9,7 +9,9 @@ class PagesInfo {
             PageInfo(LoginPage.name, () => LoginPage(), isUnAuth: true),
         SetupUserPage.name:
             PageInfo(SetupUserPage.name, () => SetupUserPage(), isUnAuth: true),
-        HomePage.name: PageInfo(HomePage.name, () => HomePage())
+        HomePage.name: PageInfo(HomePage.name, () => HomePage()),
+        CreateEditTruckPage.name:
+            PageInfo(CreateEditTruckPage.name, () => CreateEditTruckPage())
       };
 
   static List<String> get unAuthPages => [
@@ -23,6 +25,7 @@ class PagesInfo {
   static PageInfo get setupUser => pages[SetupUserPage.name]!;
   static PageInfo get login => pages[LoginPage.name]!;
   static PageInfo get home => pages[HomePage.name]!;
+  static PageInfo get createEditTruck => pages[CreateEditTruckPage.name]!;
 
   static PageInfo initialPage = loading;
   static PageInfo onAuthPage = home;

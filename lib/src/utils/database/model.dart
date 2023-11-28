@@ -102,14 +102,15 @@ abstract class Model {
         ]),
       );
 
-  Future<int> deleteWhere(WhereQuery where) {
-    String query = 'DELETE FROM `$migration`\n$where';
+  Future<int> deleteWhere({WhereQuery? where}) {
+    String query = 'DELETE FROM `$migration`';
+    if (where != null) query += '\n$where';
     dev.log('query: \n$query');
     return database.rawDelete(query);
   }
 
-  Future<int> deleteRow(dynamic id) =>
-      deleteWhere(WhereQuery.fromWhereQueryItems([
+  Future<int> deleteRow(dynamic id) => deleteWhere(
+          where: WhereQuery.fromWhereQueryItems([
         WhereQueryItem(
           column: '$index',
           condition: WhereQueryCondition.equals,

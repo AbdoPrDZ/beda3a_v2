@@ -18,9 +18,9 @@ class LoadingPage extends utils.Page<LoadingController> {
         children: [
           const Spacer(),
           Image.asset(
-            Consts.logo,
-            width: 130,
-            height: 130,
+            Consts.logo1,
+            width: 150,
+            height: 150,
           ),
           const Gap(10),
           Text(

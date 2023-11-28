@@ -8,7 +8,7 @@ class TruckMigration extends Migration {
   List<Column> get columns => [
         Column.index(),
         Column.string('name'),
-        Column.integer('driver_id'),
+        Column.integer('driver_id').nullable(),
         Column.text('details').setDefault('{}'),
         Column.text('images').setDefault('[]'),
         Column.dateTime('created_at').autoIncrement(),

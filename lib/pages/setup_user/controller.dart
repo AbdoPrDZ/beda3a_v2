@@ -13,32 +13,33 @@ class SetupUserController extends GetxController {
 
   Map<String, String> errors = {};
 
-  late TextEditController firstNameController;
-  late TextEditController lastNameController;
-  late TextEditController emailController;
-  late TextEditController phoneController;
-  late TextEditController companyController;
-  late TextEditController addressController;
-  late TextEditController passwordController;
-  late TextEditController confirmController;
+  TextEditController firstNameController = TextEditController(
+    // name: 'first_name',
+    text: 'Abderrahmane',
+  );
+  TextEditController lastNameController = TextEditController(
+    // name: 'last_name',
+    text: 'Guerguer',
+  );
+  TextEditController emailController = TextEditController(
+    // name: 'email',
+    text: 'abdopr47@gmail.com',
+  );
+  TextEditController phoneController = TextEditController(
+    // name: 'phone',
+    text: '+213778185797',
+  );
+  TextEditController companyController = TextEditController(
+    // name: 'company',
+    text: 'Abdo Pr',
+  );
+  TextEditController addressController = TextEditController(
+      // name: 'address'
+      );
+  TextEditController passwordController = TextEditController(text: '123456');
+  TextEditController confirmController = TextEditController(text: '123456');
 
   String gender = 'male';
-
-  @override
-  onInit() {
-    firstNameController =
-        TextEditController(name: 'first_name', text: 'Abderrahmane');
-    lastNameController =
-        TextEditController(name: 'last_name', text: 'Guerguer');
-    emailController =
-        TextEditController(name: 'email', text: 'abdopr47@gmail.com');
-    phoneController = TextEditController(name: 'phone', text: '+213778185797');
-    companyController = TextEditController(name: 'company', text: 'Abdo Pr');
-    addressController = TextEditController(name: 'address');
-    passwordController = TextEditController(text: '123456');
-    confirmController = TextEditController(text: '123456');
-    super.onInit();
-  }
 
   String? getFieldData(TextEditController controller) =>
       controller.text.trim().isNotEmpty ? controller.text.trim() : null;

@@ -12,7 +12,8 @@ class LoadingController extends GetxController {
     super.onReady();
   }
 
-  void loading() {
+  void loading() async {
+    await Future.delayed(Duration(seconds: 5));
     RouteManager.to(mainService.next(), clearHeaders: true);
   }
 }

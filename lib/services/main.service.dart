@@ -96,4 +96,10 @@ class MainService extends GetxService {
     await userSetting!.save();
     RouteManager.to(PagesInfo.login, clearHeaders: true);
   }
+
+  Future setThemeMode(UIThemeMode themeMode) {
+    userSetting!.themeMode = themeMode;
+    Get.forceAppUpdate();
+    return userSetting!.save();
+  }
 }

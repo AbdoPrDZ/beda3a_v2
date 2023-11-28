@@ -12,15 +12,11 @@ class LoginController extends GetxController {
 
   Map<String, String> errors = {};
 
-  late TextEditController emailPhoneController;
-  late TextEditController passwordController;
-
-  @override
-  onInit() {
-    emailPhoneController = TextEditController(name: 'email, phone');
-    passwordController = TextEditController();
-    super.onInit();
-  }
+  TextEditController emailPhoneController = TextEditController(
+    // name: 'email, phone',
+    text: 'abdopr47@gmail.com',
+  );
+  TextEditController passwordController = TextEditController(text: '123456');
 
   login() async {
     if (emailPhoneController.text != (await mainService.realUser)!.email &&

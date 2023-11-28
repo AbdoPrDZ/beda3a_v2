@@ -166,8 +166,12 @@ class _CreateDetailsItemFormState extends State<CreateDetailsItemForm> {
   void initState() {
     super.initState();
 
-    nameController = TextEditController(name: 'details_name');
-    valueController = TextEditController(name: 'details_value');
+    nameController = TextEditController(
+        // name: 'details_name'
+        );
+    valueController = TextEditController(
+        // name: 'details_value'
+        );
   }
 
   addItem() {

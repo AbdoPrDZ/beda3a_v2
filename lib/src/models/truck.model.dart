@@ -10,11 +10,11 @@ class TruckModel extends Model {
 
   static TruckModel get instance => TruckModel();
 
-  static Future<TruckCollection?> create({
+  static Future<CreateEditResult<TruckCollection?>> create({
     int? id,
     required String name,
     int? driverId,
-    Map? details,
+    Map<String, String>? details,
     List? images,
     MDateTime? createdAt,
   }) async {
@@ -23,23 +23,27 @@ class TruckModel extends Model {
       'id': id,
       'name': name,
       'driver_id': driverId,
-      'details': details,
+      'details': details != null ? jsonEncode(details) : null,
       'images': images,
       'created_at': '$createdAt',
     }));
-    return _id != null
-        ? TruckCollection(
-            _id,
-            name,
-            driverId,
-            details ?? {},
-            images ?? [],
-            createdAt,
-          )
-        : null;
+    return CreateEditResult<TruckCollection?>(
+      _id != null,
+      result: _id != null
+          ? TruckCollection(
+              _id,
+              name,
+              driverId,
+              details ?? {},
+              images ?? [],
+              createdAt,
+            )
+          : null,
+    );
   }
 
-  static Future<TruckCollection?> createFromMap(Map<String, dynamic> data) =>
+  static Future<CreateEditResult<TruckCollection?>> createFromMap(
+          Map<String, dynamic> data) =>
       create(
         name: data['name'],
         driverId: data['driver_id'],
@@ -57,13 +61,15 @@ class TruckModel extends Model {
 
   static Future<TruckCollection?> find(int id) async =>
       TruckCollection.fromCollectionNull(await instance.findRow(id));
+
+  static Future clear() async => instance.deleteWhere();
 }
 
 class TruckCollection extends Collection {
   final int id;
   String name;
   int? driverId;
-  Map details;
+  Map<String, String> details;
   List images;
   final MDateTime createdAt;
 
@@ -83,7 +89,7 @@ class TruckCollection extends Collection {
         data['id'],
         data['name'],
         data['driver_id'],
-        jsonDecode(data['details']),
+        Map<String, String>.from(jsonDecode(data['details'])),
         jsonDecode(data['images']),
         MDateTime.fromString(data['created_at'])!,
       );
@@ -94,17 +100,17 @@ class TruckCollection extends Collection {
   static TruckCollection? fromCollectionNull(Collection? collection) =>
       collection != null ? fromMap(collection.data) : null;
 
-  Future<int> update({
+  Future<CreateEditResult<int>> update({
     String? name,
     int? driverId,
-    Map? details,
+    Map<String, String>? details,
     List? images,
-  }) {
+  }) async {
     this.name = name ?? this.name;
     this.driverId = driverId;
     this.details = details ?? this.details;
     this.images = images ?? this.images;
-    return save();
+    return CreateEditResult<int>(true, result: await save());
   }
 
   Future<int> save() => TruckModel.instance.updateRow(id, data);

@@ -443,21 +443,25 @@ class _TextEditViewState extends State<TextEditView> {
 
   @override
   void dispose() {
-    if (_overlayEntry != null) _overlayEntry!.dispose();
+    try {
+      if (_overlayEntry != null) _overlayEntry!.dispose();
 
-    if (_debounce != null) _debounce?.cancel();
-    if (widget.focusNode == null) {
-      _focusNode.removeListener(() {
-        if (_focusNode.hasFocus) {
-          openOverlay();
-        } else {
-          closeOverlay();
-        }
-      });
-      _focusNode.dispose();
+      if (_debounce != null) _debounce?.cancel();
+      if (widget.focusNode == null) {
+        _focusNode.removeListener(() {
+          if (_focusNode.hasFocus) {
+            openOverlay();
+          } else {
+            closeOverlay();
+          }
+        });
+        _focusNode.dispose();
+      }
+      _controller.removeListener(() => updateSuggestions(_controller.text));
+      _controller.dispose();
+    } catch (e) {
+      print(e);
     }
-    // _controller.removeListener(() => updateSuggestions(_controller.text));
-    // _controller.dispose();
     super.dispose();
   }
 }
@@ -514,12 +518,16 @@ class FilterableList extends StatelessWidget {
 
 class TextEditController extends TextEditingController {
   final Future<List<String>> Function()? moreSuggestions;
-  final List<String> _names = [];
+  // final List<String> _names = [];
 
   // final List<ViewSessions<List>> _sessions = [];
   final List<String> _suggestions = [];
 
-  TextEditController({super.text, String? name, this.moreSuggestions})
+  TextEditController({
+    super.text,
+    // String? name,
+    this.moreSuggestions,
+  })
   /*: assert(
           name != null && RegExp(r'^[a-zA-Z0-9_,\s-]*$').hasMatch(name),
           'Invalid controller name',
@@ -531,32 +539,32 @@ class TextEditController extends TextEditingController {
           'Invalid controller name, trailing comma not allowed',
         )*/
   {
-    if (name != null) {
-      name = name.trim();
-      if (!RegExp(r'^[a-zA-Z0-9_,\s-]*$').hasMatch(name)) {
-        throw Exception('Invalid controller name');
-      } else if (name.endsWith(',')) {
-        throw Exception('Invalid controller name, trailing comma not allowed');
-      }
-      for (String name in name.split(', ')) {
-        if (_names.contains(name)) {
-          throw Exception("Name \"$name\" is deduplicated");
-        }
-        _names.add(name);
-      }
-      initSessions();
-    }
-  }
-
-  Future initSessions() async {
-    // for (String name in _names) {
-    //   try {
-    //     final sessions = await ViewSessions.instance('ui-text_edit-$name', []);
-    //     _suggestions.addAll(List<String>.from(sessions.data));
-    //     _sessions.add(sessions);
-    //   } catch (e) {}
+    // if (name != null) {
+    //   name = name.trim();
+    //   if (!RegExp(r'^[a-zA-Z0-9_,\s-]*$').hasMatch(name)) {
+    //     throw Exception('Invalid controller name');
+    //   } else if (name.endsWith(',')) {
+    //     throw Exception('Invalid controller name, trailing comma not allowed');
+    //   }
+    //   for (String name in name.split(', ')) {
+    //     if (_names.contains(name)) {
+    //       throw Exception("Name \"$name\" is deduplicated");
+    //     }
+    //     _names.add(name);
+    //   }
+    //   initSessions();
     // }
   }
+
+  // Future initSessions() async {
+  //   for (String name in _names) {
+  //     try {
+  //       final sessions = await ViewSessions.instance('ui-text_edit-$name', []);
+  //       _suggestions.addAll(List<String>.from(sessions.data));
+  //       _sessions.add(sessions);
+  //     } catch (e) {}
+  //   }
+  // }
 
   Future<Iterable<String>> getSuggestions(String text) async {
     final suggestions = _suggestions;

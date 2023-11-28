@@ -105,6 +105,8 @@ class UserCollection extends Collection {
     this.createdAt,
   ) : super({});
 
+  String get fullName => '$firstName $lastName';
+
   static UserCollection fromMap(Map<String, dynamic> data) => UserCollection(
         data['id'],
         data['first_name'],
