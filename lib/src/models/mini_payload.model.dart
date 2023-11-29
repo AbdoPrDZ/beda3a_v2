@@ -19,8 +19,8 @@ class MiniPayloadModel extends Model {
     String? chargingAddress,
     MDateTime? dischargingDate,
     String? dischargingAddress,
-    Map? details,
-    List? images,
+    Map<String, String>? details,
+    List<String>? images,
     MDateTime? createdAt,
   }) async {
     createdAt = createdAt ?? MDateTime.now();
@@ -71,8 +71,12 @@ class MiniPayloadModel extends Model {
             : null,
         dischargingAddress: data['discharging_address'],
         cost: double.parse(data['cost'].toString()),
-        details: data['details'] != null ? jsonDecode(data['details']) : null,
-        images: data['images'] != null ? jsonDecode(data['images']) : null,
+        details: data['details'] != null
+            ? Map<String, String>.from(jsonDecode(data['details']))
+            : null,
+        images: data['images'] != null
+            ? List<String>.from(jsonDecode(data['images']))
+            : null,
         createdAt: data['created_at'] != null
             ? MDateTime.fromString(data['created_at'])
             : null,
@@ -97,8 +101,8 @@ class MiniPayloadCollection extends Collection {
   MDateTime? dischargingDate;
   String? dischargingAddress;
   double cost;
-  Map details;
-  List images;
+  Map<String, String> details;
+  List<String> images;
   final MDateTime createdAt;
 
   MiniPayloadCollection(
@@ -131,8 +135,8 @@ class MiniPayloadCollection extends Collection {
             ? MDateTime.fromString(data['discharging_date'])!
             : null,
         data['discharging_address'],
-        jsonDecode(data['details']),
-        jsonDecode(data['images']),
+        Map<String, String>.from(jsonDecode(data['details'])),
+        List<String>.from(jsonDecode(data['images'])),
         MDateTime.fromString(data['created_at'])!,
       );
 
@@ -152,8 +156,8 @@ class MiniPayloadCollection extends Collection {
     String? chargingAddress,
     MDateTime? dischargingDate,
     String? dischargingAddress,
-    Map? details,
-    List? images,
+    Map<String, String>? details,
+    List<String>? images,
   }) {
     this.name = name ?? this.name;
     this.receiverName = receiverName ?? this.receiverName;

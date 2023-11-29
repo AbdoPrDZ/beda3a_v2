@@ -10,7 +10,6 @@ class TrucksTabController extends GetxController {
   MainService mainService = Get.find();
 
   RxList<TruckCollection> trucks = <TruckCollection>[].obs;
-  Rx<int> truckId = (-1).obs;
 
   @override
   onInit() {
@@ -21,11 +20,6 @@ class TrucksTabController extends GetxController {
   getTrucks() async {
     trucks.value = await TruckModel.all();
     print(trucks);
-    if (trucks.isNotEmpty) {
-      truckId.value = trucks.first.id;
-    } else {
-      truckId.value = -1;
-    }
     update();
   }
 
@@ -34,12 +28,12 @@ class TrucksTabController extends GetxController {
     getTrucks();
   }
 
-  editTruck() async {
+  editTruck(int truckId) async {
     await RouteManager.to(
       PagesInfo.createEditTruck,
       arguments: CreateEditTruckData(
         action: CreateEditPageAction.edit,
-        truckId: truckId.value!,
+        truckId: truckId,
       ),
     );
     getTrucks();

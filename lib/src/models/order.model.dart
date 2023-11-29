@@ -14,8 +14,8 @@ class OrderModel extends Model {
     int? id,
     required int fromClientId,
     required int toClientId,
-    Map? details,
-    List? images,
+    Map<String, String>? details,
+    List<String>? images,
     MDateTime? createdAt,
   }) async {
     createdAt = createdAt ?? MDateTime.now();
@@ -43,8 +43,12 @@ class OrderModel extends Model {
       create(
         fromClientId: data['from_client_id'],
         toClientId: data['to_client_id'],
-        details: data['details'] != null ? jsonDecode(data['details']) : null,
-        images: data['images'] != null ? jsonDecode(data['images']) : null,
+        details: data['details'] != null
+            ? Map<String, String>.from(jsonDecode(data['details']))
+            : null,
+        images: data['images'] != null
+            ? List<String>.from(jsonDecode(data['images']))
+            : null,
         createdAt: data['created_at'] != null
             ? MDateTime.fromString(data['created_at'])
             : null,
@@ -63,8 +67,8 @@ class OrderCollection extends Collection {
   final int id;
   int fromClientId;
   int toClientId;
-  Map details;
-  List images;
+  Map<String, String> details;
+  List<String> images;
   final MDateTime createdAt;
 
   OrderCollection(
@@ -85,8 +89,8 @@ class OrderCollection extends Collection {
         data['id'],
         data['from_client_id'],
         data['to_client_id'],
-        jsonDecode(data['details']),
-        jsonDecode(data['images']),
+        Map<String, String>.from(jsonDecode(data['details'])),
+        List<String>.from(jsonDecode(data['images'])),
         MDateTime.fromString(data['created_at'])!,
       );
 
@@ -99,8 +103,8 @@ class OrderCollection extends Collection {
   Future<int> update({
     int? fromClientId,
     int? toClientId,
-    Map? details,
-    List? images,
+    Map<String, String>? details,
+    List<String>? images,
   }) {
     this.fromClientId = fromClientId ?? this.fromClientId;
     this.toClientId = toClientId ?? this.toClientId;

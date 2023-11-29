@@ -25,15 +25,21 @@ class HomePage extends utils.Page<HomeController> {
           buildTab: (context) => HomeTab(homeController: controller),
         ),
         DrawerItem(
+          'Drivers',
+          Icons.person_4_outlined,
+          buildTab: (context) => DriversTab(),
+          // buildFloatingActionButton: DriversTab.floatingActionButton,
+        ),
+        DrawerItem(
           'Trucks',
           Icons.directions_bus_outlined,
           buildTab: (context) => TrucksTab(),
           // buildFloatingActionButton: TrucksTab.floatingActionButton,
         ),
         DrawerItem(
-          'Drivers',
-          Icons.person_4_outlined,
-          buildTab: (context) => DriversTab(),
+          'Payload',
+          Icons.apps,
+          buildTab: (context) => PayloadsTab(),
           // buildFloatingActionButton: DriversTab.floatingActionButton,
         ),
         DrawerItem(

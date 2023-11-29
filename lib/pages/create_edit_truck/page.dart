@@ -1,9 +1,12 @@
 import 'package:gap/gap.dart';
 
+import '../../src/consts/costs.dart';
 import '../../src/consts/ui_theme.dart';
 import '../../src/models/models.dart';
 import '../../src/utils/utils.dart' as utils;
+import '../../src/utils/utils.dart';
 import '../../src/views/views.dart';
+import '../create_edit_driver/controller.dart';
 import 'controller.dart';
 
 class CreateEditTruckPage extends utils.Page<CreateEditTruckController> {
@@ -56,62 +59,65 @@ class CreateEditTruckPage extends utils.Page<CreateEditTruckController> {
                   },
                   label: 'Truck name',
                 ),
-                // Flex(
-                //   direction: Axis.horizontal,
-                //   children: [
-                //     Flexible(
-                //       child: DropDownView<DriverId?>(
-                //         value: controller.driverId,
-                //         label: 'Current Driver',
-                //         items: [
-                //           const DropdownMenuItem(
-                //             value: null,
-                //             child: Text('None'),
-                //           ),
-                //           for (DriverModel driver in controller.drivers)
-                //             DropdownMenuItem(
-                //               value: driver.id,
-                //               child: Text(driver.fullName),
-                //             ),
-                //         ],
-                //         onChanged: (value) {
-                //           controller.driverId = value;
-                //           controller.update();
-                //         },
-                //       ),
-                //     ),
-                //     OutlineButtonView.icon(
-                //       Icons.add,
-                //       margin: const EdgeInsets.only(top: 30),
-                //       onPressed: () async {
-                //         await RouteManager.to(PagesInfo.createEditDriver);
-                //         controller.getDrivers();
-                //       },
-                //       size: 35,
-                //     ),
-                //     if (controller.driverId != null) ...[
-                //       const Gap(5),
-                //       OutlineButtonView.icon(
-                //         Icons.edit,
-                //         margin: const EdgeInsets.only(top: 30),
-                //         onPressed: () async {
-                //           await RouteManager.to(
-                //             PagesInfo.createEditDriver,
-                //             arguments: CreateEditDriverData(
-                //               action: CreateEditPageAction.edit,
-                //               driverId: controller.driverId,
-                //             ),
-                //           );
-                //           controller.getDrivers();
-                //         },
-                //         size: 35,
-                //         iconColor: UIColors.warning,
-                //         borderColor: UIColors.warning,
-                //       ),
-                //     ]
-                //   ],
-                // ),
-
+                Flex(
+                  direction: Axis.horizontal,
+                  children: [
+                    Flexible(
+                      child: DropDownView<int?>(
+                        value: controller.driverId,
+                        label: 'Current Driver',
+                        items: [
+                          const DropdownMenuItem(
+                            value: null,
+                            child: Text('None'),
+                          ),
+                          for (DriverCollection driver in controller.drivers)
+                            DropdownMenuItem(
+                              value: driver.id,
+                              child: FutureBuilder<UserCollection>(
+                                  future: driver.user,
+                                  builder: (context, snapshot) {
+                                    return Text(snapshot.data?.fullName ?? '');
+                                  }),
+                            ),
+                        ],
+                        onChanged: (value) {
+                          controller.driverId = value;
+                          controller.update();
+                        },
+                      ),
+                    ),
+                    OutlineButtonView.icon(
+                      Icons.add,
+                      margin: const EdgeInsets.only(top: 30),
+                      onPressed: () async {
+                        await RouteManager.to(PagesInfo.createEditDriver);
+                        controller.getDrivers();
+                      },
+                      size: 35,
+                    ),
+                    if (controller.driverId != null) ...[
+                      const Gap(5),
+                      OutlineButtonView.icon(
+                        Icons.edit,
+                        margin: const EdgeInsets.only(top: 30),
+                        onPressed: () async {
+                          await RouteManager.to(
+                            PagesInfo.createEditDriver,
+                            arguments: CreateEditDriverData(
+                              action: CreateEditPageAction.edit,
+                              driverId: controller.driverId,
+                            ),
+                          );
+                          controller.getDrivers();
+                        },
+                        size: 35,
+                        iconColor: UIColors.warning,
+                        borderColor: UIColors.warning,
+                      ),
+                    ]
+                  ],
+                ),
                 // ExpensesView(
                 //   expenses: controller.expenses,
                 //   addExpenses: () async {

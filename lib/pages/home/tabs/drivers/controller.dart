@@ -11,8 +11,6 @@ class DriversTabController extends GetxController {
 
   RxList<DriverCollection> drivers = <DriverCollection>[].obs;
 
-  Rx<int> driverId = (-1).obs;
-
   @override
   onInit() {
     getDrivers();
@@ -22,11 +20,6 @@ class DriversTabController extends GetxController {
   getDrivers() async {
     drivers.value = await DriverModel.all();
     print(drivers);
-    if (drivers.isNotEmpty) {
-      driverId.value = drivers.first.id;
-    } else {
-      driverId.value = -1;
-    }
     update();
   }
 
@@ -35,12 +28,12 @@ class DriversTabController extends GetxController {
     getDrivers();
   }
 
-  editDriver() async {
+  editDriver(int driverId) async {
     await RouteManager.to(
       PagesInfo.createEditDriver,
       arguments: CreateEditDriverData(
         action: CreateEditPageAction.edit,
-        driverId: driverId.value!,
+        driverId: driverId,
       ),
     );
     getDrivers();

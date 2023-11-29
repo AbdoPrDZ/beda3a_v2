@@ -6,17 +6,18 @@ import '../../../../src/utils/utils.dart' as utils;
 import '../../../../src/views/views.dart';
 import 'controller.dart';
 
-class TrucksTab extends utils.Page<TrucksTabController> {
-  TrucksTab({Key? key}) : super(controller: TrucksTabController(), key: key);
+class PayloadsTab extends utils.Page<PayloadsTabController> {
+  PayloadsTab({Key? key})
+      : super(controller: PayloadsTabController(), key: key);
 
   @override
-  TrucksTabController get controller => super.controller!;
+  PayloadsTabController get controller => super.controller!;
 
   // static Widget floatingActionButton(BuildContext context) =>
   //     FloatingActionButton(
   //       backgroundColor: UIThemeColors.iconBg,
-  //       onPressed: () => utils.RouteManager.to(PagesInfo.createEditTruck),
-  //       child: const Icon(Icons.fire_truck),
+  //       onPressed: () => utils.RouteManager.to(PagesInfo.createEditPayload),
+  //       child: const Icon(Icons.apps),
   //     );
 
   @override
@@ -25,23 +26,23 @@ class TrucksTab extends utils.Page<TrucksTabController> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            heroTag: 'create_truck',
+            heroTag: 'create_payload',
             backgroundColor: UIThemeColors.iconBg,
-            onPressed: controller.createTruck,
-            child: const Icon(Icons.fire_truck),
+            onPressed: controller.createPayload,
+            child: const Icon(Icons.apps),
           ),
           const Gap(10),
           FloatingActionButton(
-            heroTag: 'clear_trucks',
+            heroTag: 'clear_payloads',
             backgroundColor: UIThemeColors.danger,
-            onPressed: controller.clearTrucks,
+            onPressed: controller.clearPayloads,
             child: const Icon(Icons.clear_all),
           ),
         ],
       );
 
-  Widget _buildItem(BuildContext context, TruckCollection truck) => InkWell(
-        onTap: () => controller.editTruck(truck.id),
+  Widget _buildItem(BuildContext context, PayloadCollection payload) => InkWell(
+        onTap: () => controller.editPayload(payload.id),
         child: Container(
           margin: const EdgeInsets.symmetric(
             horizontal: 10,
@@ -51,13 +52,13 @@ class TrucksTab extends utils.Page<TrucksTabController> {
             direction: Axis.horizontal,
             children: [
               UserAvatarView.label(utils.getNameSymbols(
-                truck.name,
+                payload.name,
               )),
               Text.rich(
                 TextSpan(
                   children: [
                     TextSpan(
-                      text: truck.name,
+                      text: payload.name,
                       style: TextStyle(
                         color: UIThemeColors.text2,
                         fontSize: 18,
@@ -65,7 +66,7 @@ class TrucksTab extends utils.Page<TrucksTabController> {
                       ),
                     ),
                     TextSpan(
-                      text: '\n${truck.createdAt}',
+                      text: '\n${payload.createdAt}',
                       style: TextStyle(
                         color: UIThemeColors.text3,
                         fontSize: 12,
@@ -84,13 +85,13 @@ class TrucksTab extends utils.Page<TrucksTabController> {
   Widget buildBody(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: SingleChildScrollView(
-          child: StreamBuilder<List<TruckCollection>>(
-            stream: controller.trucks.stream,
+          child: StreamBuilder<List<PayloadCollection>>(
+            stream: controller.payloads.stream,
             builder: (context, snapshot) => Flex(
               direction: Axis.vertical,
               children: [
-                for (TruckCollection truck in snapshot.data ?? [])
-                  _buildItem(context, truck)
+                for (PayloadCollection payload in snapshot.data ?? [])
+                  _buildItem(context, payload)
               ],
             ),
           ),

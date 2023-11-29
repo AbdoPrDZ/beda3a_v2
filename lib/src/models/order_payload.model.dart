@@ -27,8 +27,8 @@ class OrderPayloadModel extends Model {
     required String gettingPriceType,
     required String gettingGeneralPriceType,
     required double generalPrice,
-    Map? details,
-    List? images,
+    Map<String, String>? details,
+    List<String>? images,
     MDateTime? createdAt,
   }) async {
     createdAt = createdAt ?? MDateTime.now();
@@ -100,8 +100,12 @@ class OrderPayloadModel extends Model {
         totalPrice: double.parse(data['total_price'].toString()),
         generalPrice: double.parse(data['general_price'].toString()),
         gettingGeneralPriceType: data['getting_general_price_type'],
-        details: data['details'] != null ? jsonDecode(data['details']) : null,
-        images: data['images'] != null ? jsonDecode(data['images']) : null,
+        details: data['details'] != null
+            ? Map<String, String>.from(jsonDecode(data['details']))
+            : null,
+        images: data['images'] != null
+            ? List<String>.from(jsonDecode(data['images']))
+            : null,
         createdAt: data['created_at'] != null
             ? MDateTime.fromString(data['created_at'])
             : null,
@@ -133,8 +137,8 @@ class OrderPayloadCollection extends Collection {
   double totalPrice;
   String gettingGeneralPriceType;
   double generalPrice;
-  Map details;
-  List images;
+  Map<String, String> details;
+  List<String> images;
   final MDateTime createdAt;
 
   OrderPayloadCollection(
@@ -184,8 +188,8 @@ class OrderPayloadCollection extends Collection {
         double.parse(data['total_price'].toString()),
         data['getting_general_price_type'],
         double.parse(data['general_price'].toString()),
-        jsonDecode(data['details']),
-        jsonDecode(data['images']),
+        Map<String, String>.from(jsonDecode(data['details'])),
+        List<String>.from(jsonDecode(data['images'])),
         MDateTime.fromString(data['created_at'])!,
       );
 
@@ -211,8 +215,8 @@ class OrderPayloadCollection extends Collection {
     double? totalPrice,
     String? gettingGeneralPriceType,
     double? generalPrice,
-    Map? details,
-    List? images,
+    Map<String, String>? details,
+    List<String>? images,
   }) {
     this.payloadId = payloadId ?? this.payloadId;
     this.count = count ?? this.count;

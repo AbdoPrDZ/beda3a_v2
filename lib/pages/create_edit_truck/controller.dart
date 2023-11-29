@@ -21,26 +21,30 @@ class CreateEditTruckController extends GetxController {
     // name: 'truck_name'
     text: 'Official Truck',
   );
-  // List<DriverModel> drivers = [];
-  // DriverId? driverId;
+  List<DriverCollection> drivers = [];
+  int? driverId;
   // List<ExpensesModel> expenses = [];
   Map<String, String> details = {};
 
-  // Future getDrivers() async {
-  //   drivers = await DriverModel.all();
-  //   drivers = drivers.where((driver) => driver.currentTripId == null).toList();
-  //   update();
-  // }
+  Future getDrivers() async {
+    drivers = await DriverModel.all();
+    // drivers = drivers.where((driver) => driver.currentTripId == null).toList();
+    if (driverId != null &&
+        ![for (var driver in drivers) driver.id].contains(driverId)) {
+      driverId = null;
+    }
+    update();
+  }
 
   @override
   void onInit() {
-    // getDrivers();
+    getDrivers();
     if (pageData.action.isEdit) {
       TruckModel.find(pageData.truckId!).then((truck) async {
         oldTruck = truck;
         truckId = truck!.id;
         nameController.text = truck.name;
-        // driverId = truck.driverId;
+        driverId = truck.driverId;
         // expenses = await truck.expenses;
         details = truck.details;
         update();
@@ -60,7 +64,7 @@ class CreateEditTruckController extends GetxController {
       final result = await TruckModel.create(
         // truckId: truckId!,
         name: getFieldData(nameController)!,
-        // driverId: driverId,
+        driverId: driverId,
         // expenses: expenses,
         details: details,
       );

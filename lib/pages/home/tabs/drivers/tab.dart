@@ -1,9 +1,9 @@
-import 'package:get/get.dart';
+import 'package:gap/gap.dart';
 
 import '../../../../src/consts/costs.dart';
+import '../../../../src/models/models.dart';
 import '../../../../src/utils/utils.dart' as utils;
 import '../../../../src/views/views.dart';
-import '../../../create_edit_driver/controller.dart';
 import 'controller.dart';
 
 class DriversTab extends utils.Page<DriversTabController> {
@@ -20,55 +20,83 @@ class DriversTab extends utils.Page<DriversTabController> {
   //     );
 
   @override
-  Widget buildBody(BuildContext context) => Flex(
+  Widget? buildFloatingActionButton(BuildContext context) => Flex(
         direction: Axis.vertical,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          ButtonView.text(
-            margin: const EdgeInsets.only(bottom: 5),
-            backgroundColor: UIColors.success,
+          FloatingActionButton(
+            heroTag: 'create_driver',
+            backgroundColor: UIThemeColors.iconBg,
             onPressed: controller.createDriver,
-            text: 'Create Driver',
+            child: const Icon(Icons.person_add_alt),
           ),
-          Expanded(
-            child: Container(
-              height: 200,
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              decoration: BoxDecoration(
-                color: UIThemeColors.cardBg,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: SingleChildScrollView(
-                child: StreamBuilder(
-                  stream: controller.drivers.stream,
-                  builder: (context, snapshot) => Text(
-                    'Drivers: ${snapshot.data ?? []}',
-                    style: TextStyle(
-                      color: UIThemeColors.text2,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Obx(
-            () => ButtonView.text(
-              margin: const EdgeInsets.only(top: 5),
-              backgroundColor: UIColors.warning,
-              onPressed: controller.driverId.value != -1
-                  ? controller.editDriver
-                  : null,
-              text: 'Edit Drivers',
-            ),
-          ),
-          ButtonView.text(
-            margin: const EdgeInsets.only(top: 5),
-            backgroundColor: UIColors.danger,
+          const Gap(10),
+          FloatingActionButton(
+            heroTag: 'clear_drivers',
+            backgroundColor: UIThemeColors.danger,
             onPressed: controller.clearDrivers,
-            text: 'Clear Drivers',
+            child: const Icon(Icons.clear_all),
           ),
         ],
+      );
+
+  Widget _buildItem(BuildContext context, DriverCollection driver) => InkWell(
+        onTap: () => controller.editDriver(driver.id),
+        child: Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 5,
+          ),
+          child: FutureBuilder<UserCollection>(
+            future: driver.user,
+            builder: (context, snapshot) => Flex(
+              direction: Axis.horizontal,
+              children: [
+                UserAvatarView.label(utils.getNameSymbols(
+                  snapshot.data?.fullName ?? 'D${driver.id}',
+                )),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: snapshot.data?.fullName ?? 'D${driver.id}',
+                        style: TextStyle(
+                          color: UIThemeColors.text2,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextSpan(
+                        text: '\n${driver.createdAt}',
+                        style: TextStyle(
+                          color: UIThemeColors.text3,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  @override
+  Widget buildBody(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: SingleChildScrollView(
+          child: StreamBuilder<List<DriverCollection>>(
+            stream: controller.drivers.stream,
+            builder: (context, snapshot) => Flex(
+              direction: Axis.vertical,
+              children: [
+                for (DriverCollection driver in snapshot.data ?? [])
+                  _buildItem(context, driver)
+              ],
+            ),
+          ),
+        ),
       );
 }

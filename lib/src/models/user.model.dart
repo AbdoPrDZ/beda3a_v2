@@ -18,8 +18,8 @@ class UserModel extends Model {
     String? address,
     String? company,
     required String gender,
-    Map? details,
-    List? images,
+    Map<String, String>? details,
+    List<String>? images,
     MDateTime? createdAt,
   }) async {
     createdAt = createdAt ?? MDateTime.now();
@@ -62,8 +62,12 @@ class UserModel extends Model {
         address: data['address'],
         company: data['company'],
         gender: data['gender'],
-        details: data['details'] != null ? jsonDecode(data['details']) : null,
-        images: data['images'] != null ? jsonDecode(data['images']) : null,
+        details: data['details'] != null
+            ? Map<String, String>.from(jsonDecode(data['details']))
+            : null,
+        images: data['images'] != null
+            ? List<String>.from(jsonDecode(data['images']))
+            : null,
         createdAt: data['created_at'] != null
             ? MDateTime.fromString(data['created_at'])
             : null,
@@ -90,8 +94,8 @@ class UserCollection extends Collection {
   String? address;
   String? company;
   String gender;
-  Map details;
-  List images;
+  Map<String, String> details;
+  List<String> images;
   final MDateTime createdAt;
 
   UserCollection(
@@ -119,8 +123,8 @@ class UserCollection extends Collection {
         data['address'],
         data['company'],
         data['gender'],
-        jsonDecode(data['details']),
-        jsonDecode(data['images']),
+        Map<String, String>.from(jsonDecode(data['details'])),
+        List<String>.from(jsonDecode(data['images'])),
         MDateTime.fromString(data['created_at'])!,
       );
 
@@ -138,8 +142,8 @@ class UserCollection extends Collection {
     String? address,
     String? company,
     String? gender,
-    Map? details,
-    List? images,
+    Map<String, String>? details,
+    List<String>? images,
   }) {
     this.firstName = firstName ?? this.firstName;
     this.lastName = lastName ?? this.lastName;

@@ -14,8 +14,8 @@ class ExpenseModel extends Model {
     required String name,
     required String address,
     required double cost,
-    Map? details,
-    List? images,
+    Map<String, String>? details,
+    List<String>? images,
     MDateTime? createdAt,
   }) async {
     createdAt = createdAt ?? MDateTime.now();
@@ -46,8 +46,12 @@ class ExpenseModel extends Model {
         name: data['name'],
         address: data['address'],
         cost: double.parse(data['cost'].toString()),
-        details: data['details'] != null ? jsonDecode(data['details']) : null,
-        images: data['images'] != null ? jsonDecode(data['images']) : null,
+        details: data['details'] != null
+            ? Map<String, String>.from(jsonDecode(data['details']))
+            : null,
+        images: data['images'] != null
+            ? List<String>.from(jsonDecode(data['images']))
+            : null,
         createdAt: data['created_at'] != null
             ? MDateTime.fromString(data['created_at'])
             : null,
@@ -67,8 +71,8 @@ class ExpenseCollection extends Collection {
   String name;
   String address;
   double cost;
-  Map details;
-  List images;
+  Map<String, String> details;
+  List<String> images;
   final MDateTime createdAt;
 
   ExpenseCollection(
@@ -87,8 +91,8 @@ class ExpenseCollection extends Collection {
         data['name'],
         data['address'],
         double.parse(data['cost'].toString()),
-        jsonDecode(data['details']),
-        jsonDecode(data['images']),
+        Map<String, String>.from(jsonDecode(data['details'])),
+        List<String>.from(jsonDecode(data['images'])),
         MDateTime.fromString(data['created_at'])!,
       );
 
@@ -102,8 +106,8 @@ class ExpenseCollection extends Collection {
     String? name,
     String? address,
     double? cost,
-    Map? details,
-    List? images,
+    Map<String, String>? details,
+    List<String>? images,
   }) {
     this.name = name ?? this.name;
     this.address = address ?? this.address;

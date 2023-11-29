@@ -78,10 +78,10 @@ class _TextEditViewState extends State<TextEditView> {
   final LayerLink _layerLink = LayerLink();
   late TextEditController _controller;
   bool _hasOpenedOverlay = false;
-  OverlayEntry? _overlayEntry;
-  Iterable<String> _suggestions = [];
-  Timer? _debounce;
-  String? _previousAsyncText;
+  // OverlayEntry? _overlayEntry;
+  // Iterable<String> _suggestions = [];
+  // Timer? _debounce;
+  // String? _previousAsyncText;
   late FocusNode _focusNode;
   late TextInputType _keyboardType;
   bool _hideText = false;
@@ -94,23 +94,23 @@ class _TextEditViewState extends State<TextEditView> {
     _hideText = _keyboardType == TextInputType.visiblePassword;
     _focusNode = widget.focusNode ?? FocusNode();
     _focusNode.addListener(() {
-      if (_focusNode.hasFocus) {
-        openOverlay();
-      } else {
-        Future.delayed(const Duration(milliseconds: 150))
-            .then((_) => closeOverlay());
-      }
+      //   if (_focusNode.hasFocus) {
+      //     openOverlay();
+      //   } else {
+      //     Future.delayed(const Duration(milliseconds: 150))
+      //         .then((_) => closeOverlay());
+      //   }
       setState(() {
         _isFocused = _focusNode.hasFocus;
       });
     });
-    _controller = widget.controller ??
-        TextEditController(text: widget.initialValue ?? '');
+    _controller =
+        widget.controller ?? TextEditController(text: widget.initialValue);
 
-    _controller.addListener(() {
-      updateSuggestions(_controller.text);
-      _currentState?.didChange(_controller.text);
-    });
+    // _controller.addListener(() {
+    //   updateSuggestions(_controller.text);
+    //   _currentState?.didChange(_controller.text);
+    // });
   }
 
   void pickDate() async {
@@ -139,88 +139,88 @@ class _TextEditViewState extends State<TextEditView> {
   //   )));
   // }
 
-  void openOverlay() {
-    if (_overlayEntry == null) {
-      RenderBox renderBox = context.findRenderObject() as RenderBox;
-      var size = renderBox.size;
-      var offset = renderBox.localToGlobal(Offset.zero);
+  // void openOverlay() {
+  //   if (_overlayEntry == null) {
+  //     RenderBox renderBox = context.findRenderObject() as RenderBox;
+  //     var size = renderBox.size;
+  //     var offset = renderBox.localToGlobal(Offset.zero);
 
-      _overlayEntry ??= OverlayEntry(
-        builder: (context) => Positioned(
-          left: offset.dx,
-          top: offset.dy
-          // +
-          //     size.height -
-          //     (widget.margin.top + widget.margin.bottom) +
-          //     2
-          ,
-          width: size.width - (widget.margin.left + widget.margin.right),
-          child: CompositedTransformFollower(
-            link: _layerLink,
-            showWhenUnlinked: false,
-            offset: Offset(
-              0.0,
-              size.height -
-                  (widget.margin.top +
-                      widget.margin.bottom +
-                      (widget.label != null ? 30 : 0)) +
-                  2,
-            ),
-            child: FilterableList(
-              items: _suggestions,
-              onItemTapped: (value) {
-                _controller.value = TextEditingValue(
-                  text: value,
-                  selection: TextSelection.collapsed(offset: value.length),
-                );
-                widget.onChanged?.call(value);
-                widget.onSubmitted?.call(value);
-                closeOverlay();
-                _focusNode.unfocus();
-              },
-            ),
-          ),
-        ),
-      );
-    }
-    if (!_hasOpenedOverlay) {
-      Overlay.of(context).insert(_overlayEntry!);
-      setState(() => _hasOpenedOverlay = true);
-    }
-  }
+  //     _overlayEntry ??= OverlayEntry(
+  //       builder: (context) => Positioned(
+  //         left: offset.dx,
+  //         top: offset.dy
+  //         // +
+  //         //     size.height -
+  //         //     (widget.margin.top + widget.margin.bottom) +
+  //         //     2
+  //         ,
+  //         width: size.width - (widget.margin.left + widget.margin.right),
+  //         child: CompositedTransformFollower(
+  //           link: _layerLink,
+  //           showWhenUnlinked: false,
+  //           offset: Offset(
+  //             0.0,
+  //             size.height -
+  //                 (widget.margin.top +
+  //                     widget.margin.bottom +
+  //                     (widget.label != null ? 30 : 0)) +
+  //                 2,
+  //           ),
+  //           child: FilterableList(
+  //             items: _suggestions,
+  //             onItemTapped: (value) {
+  //               _controller.value = TextEditingValue(
+  //                 text: value,
+  //                 selection: TextSelection.collapsed(offset: value.length),
+  //               );
+  //               widget.onChanged?.call(value);
+  //               widget.onSubmitted?.call(value);
+  //               closeOverlay();
+  //               _focusNode.unfocus();
+  //             },
+  //           ),
+  //         ),
+  //       ),
+  //     );
+  //   }
+  //   if (!_hasOpenedOverlay) {
+  //     Overlay.of(context).insert(_overlayEntry!);
+  //     setState(() => _hasOpenedOverlay = true);
+  //   }
+  // }
 
-  void closeOverlay() {
-    if (_hasOpenedOverlay) {
-      _overlayEntry!.remove();
-      setState(() {
-        _hasOpenedOverlay = false;
-      });
-    }
-  }
+  // void closeOverlay() {
+  //   if (_hasOpenedOverlay) {
+  //     _overlayEntry!.remove();
+  //     setState(() {
+  //       _hasOpenedOverlay = false;
+  //     });
+  //   }
+  // }
 
-  Future<void> updateSuggestions(String text) async {
-    reBuildOverlay();
-    if (_controller.canGetSuggestions) {
-      if (_previousAsyncText == text) return;
-      if (_debounce != null && _debounce!.isActive) _debounce!.cancel();
+  // Future<void> updateSuggestions(String text) async {
+  //   reBuildOverlay();
+  //   if (_controller.canGetSuggestions) {
+  //     if (_previousAsyncText == text) return;
+  //     if (_debounce != null && _debounce!.isActive) _debounce!.cancel();
 
-      setState(() {
-        _previousAsyncText = text;
-      });
+  //     setState(() {
+  //       _previousAsyncText = text;
+  //     });
 
-      _debounce = Timer(
-        widget.debounceDuration,
-        () async {
-          _suggestions = await _controller.getSuggestions(text);
-          reBuildOverlay();
-        },
-      );
-    }
-  }
+  //     _debounce = Timer(
+  //       widget.debounceDuration,
+  //       () async {
+  //         _suggestions = await _controller.getSuggestions(text);
+  //         reBuildOverlay();
+  //       },
+  //     );
+  //   }
+  // }
 
-  void reBuildOverlay() {
-    if (_overlayEntry != null) _overlayEntry!.markNeedsBuild();
-  }
+  // void reBuildOverlay() {
+  //   if (_overlayEntry != null) _overlayEntry!.markNeedsBuild();
+  // }
 
   FormFieldState<String>? _currentState;
 
@@ -290,10 +290,10 @@ class _TextEditViewState extends State<TextEditView> {
                   cursorColor: widget.cursorColor,
                   onChanged: widget.onChanged,
                   style: TextStyle(color: UIThemeColors.fieldText),
-                  onEditingComplete: closeOverlay,
+                  // onEditingComplete: closeOverlay,
                   onSubmitted: (value) {
                     widget.onSubmitted?.call(value);
-                    closeOverlay();
+                    // closeOverlay();
                     _focusNode.unfocus();
                   },
                   decoration: InputDecoration(
@@ -444,20 +444,20 @@ class _TextEditViewState extends State<TextEditView> {
   @override
   void dispose() {
     try {
-      if (_overlayEntry != null) _overlayEntry!.dispose();
+      // if (_overlayEntry != null) _overlayEntry!.dispose();
 
-      if (_debounce != null) _debounce?.cancel();
-      if (widget.focusNode == null) {
-        _focusNode.removeListener(() {
-          if (_focusNode.hasFocus) {
-            openOverlay();
-          } else {
-            closeOverlay();
-          }
-        });
-        _focusNode.dispose();
-      }
-      _controller.removeListener(() => updateSuggestions(_controller.text));
+      // if (_debounce != null) _debounce?.cancel();
+      // if (widget.focusNode == null) {
+      //   _focusNode.removeListener(() {
+      //     if (_focusNode.hasFocus) {
+      //       openOverlay();
+      //     } else {
+      //       closeOverlay();
+      //     }
+      //   });
+      //   _focusNode.dispose();
+      // }
+      // _controller.removeListener(() => updateSuggestions(_controller.text));
       _controller.dispose();
     } catch (e) {
       print(e);

@@ -14,6 +14,8 @@ class PagesInfo {
             PageInfo(CreateEditTruckPage.name, () => CreateEditTruckPage()),
         CreateEditDriverPage.name:
             PageInfo(CreateEditDriverPage.name, () => CreateEditDriverPage()),
+        CreateEditPayloadPage.name:
+            PageInfo(CreateEditPayloadPage.name, () => CreateEditPayloadPage()),
       };
 
   static List<String> get unAuthPages => [
@@ -29,6 +31,7 @@ class PagesInfo {
   static PageInfo get home => pages[HomePage.name]!;
   static PageInfo get createEditTruck => pages[CreateEditTruckPage.name]!;
   static PageInfo get createEditDriver => pages[CreateEditDriverPage.name]!;
+  static PageInfo get createEditPayload => pages[CreateEditPayloadPage.name]!;
 
   static PageInfo initialPage = loading;
   static PageInfo onAuthPage = home;

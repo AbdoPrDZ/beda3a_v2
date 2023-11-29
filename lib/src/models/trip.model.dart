@@ -16,8 +16,8 @@ class TripModel extends Model {
     required double distance,
     MDateTime? startAt,
     MDateTime? endAt,
-    Map? details,
-    List? images,
+    Map<String, String>? details,
+    List<String>? images,
     MDateTime? createdAt,
   }) async {
     createdAt = createdAt ?? MDateTime.now();
@@ -58,8 +58,12 @@ class TripModel extends Model {
         endAt: data['end_at'] != null
             ? MDateTime.fromString(data['end_at'])
             : null,
-        details: data['details'] != null ? jsonDecode(data['details']) : null,
-        images: data['images'] != null ? jsonDecode(data['images']) : null,
+        details: data['details'] != null
+            ? Map<String, String>.from(jsonDecode(data['details']))
+            : null,
+        images: data['images'] != null
+            ? List<String>.from(jsonDecode(data['images']))
+            : null,
         createdAt: data['created_at'] != null
             ? MDateTime.fromString(data['created_at'])
             : null,
@@ -81,8 +85,8 @@ class TripCollection extends Collection {
   double distance;
   MDateTime? startAt;
   MDateTime? endAt;
-  Map details;
-  List images;
+  Map<String, String> details;
+  List<String> images;
   final MDateTime createdAt;
 
   TripCollection(
@@ -104,8 +108,8 @@ class TripCollection extends Collection {
         double.parse(data['distance'].toString()),
         MDateTime.fromString(data['start_at'])!,
         MDateTime.fromString(data['end_at'])!,
-        jsonDecode(data['details']),
-        jsonDecode(data['images']),
+        Map<String, String>.from(jsonDecode(data['details'])),
+        List<String>.from(jsonDecode(data['images'])),
         MDateTime.fromString(data['created_at'])!,
       );
 
@@ -121,8 +125,8 @@ class TripCollection extends Collection {
     double? distance,
     MDateTime? startAt,
     MDateTime? endAt,
-    Map? details,
-    List? images,
+    Map<String, String>? details,
+    List<String>? images,
   }) {
     this.from = from ?? this.from;
     this.to = to ?? this.to;

@@ -13,8 +13,8 @@ class DriverModel extends Model {
   static Future<DriverCollection?> create({
     int? id,
     required int userId,
-    Map? details,
-    List? images,
+    Map<String, String>? details,
+    List<String>? images,
     MDateTime? createdAt,
   }) async {
     createdAt = createdAt ?? MDateTime.now();
@@ -48,8 +48,8 @@ class DriverModel extends Model {
     String? address,
     String? company,
     required String gender,
-    Map? details,
-    List? images,
+    Map<String, String>? details,
+    List<String>? images,
     MDateTime? createdAt,
   }) async {
     createdAt = createdAt ?? MDateTime.now();
@@ -80,8 +80,12 @@ class DriverModel extends Model {
       create(
         userId: data['user_id'],
         // username: data['username'],
-        details: data['details'] != null ? jsonDecode(data['details']) : null,
-        images: data['images'] != null ? jsonDecode(data['images']) : null,
+        details: data['details'] != null
+            ? Map<String, String>.from(jsonDecode(data['details']))
+            : null,
+        images: data['images'] != null
+            ? List<String>.from(jsonDecode(data['images']))
+            : null,
         createdAt: data['created_at'] != null
             ? MDateTime.fromString(data['created_at'])
             : null,
@@ -102,8 +106,8 @@ class DriverCollection extends Collection {
   final int id;
   final int userId;
   // String username;
-  Map details;
-  List images;
+  Map<String, String> details;
+  List<String> images;
   final MDateTime createdAt;
 
   DriverCollection(
@@ -122,8 +126,8 @@ class DriverCollection extends Collection {
         data['id'],
         data['user_id'],
         // data['username'],
-        jsonDecode(data['details']),
-        jsonDecode(data['images']),
+        Map<String, String>.from(jsonDecode(data['details'])),
+        List<String>.from(jsonDecode(data['images'])),
         MDateTime.fromString(data['created_at'])!,
       );
 
@@ -141,8 +145,8 @@ class DriverCollection extends Collection {
     String? address,
     String? company,
     String? gender,
-    Map? details,
-    List? images,
+    Map<String, String>? details,
+    List<String>? images,
   }) async {
     await (await user).update(
       firstName: firstName,

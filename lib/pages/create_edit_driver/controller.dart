@@ -17,16 +17,16 @@ class CreateEditDriverController extends GetxController {
 
   TextEditController firstNameController = TextEditController(
       // name: 'driver_first_name'
-      text: 'Ahmed');
+      text: 'Driver');
   TextEditController lastNameController = TextEditController(
       // name: 'driver_last_name'
-      text: 'Ali');
+      text: '1');
   TextEditController phoneController = TextEditController(
       // name: 'driver_phone'
-      text: '+213 855 482 1595');
+      text: '+2130000001');
   TextEditController emailController = TextEditController(
       // name: 'driver_email'
-      text: 'ahmed_ali@gmail.com');
+      text: 'driver1@gmail.com');
   TextEditController addressController = TextEditController(
       // name: 'driver_address'
       );

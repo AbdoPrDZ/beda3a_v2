@@ -15,7 +15,7 @@ class TruckModel extends Model {
     required String name,
     int? driverId,
     Map<String, String>? details,
-    List? images,
+    List<String>? images,
     MDateTime? createdAt,
   }) async {
     createdAt = createdAt ?? MDateTime.now();
@@ -47,8 +47,12 @@ class TruckModel extends Model {
       create(
         name: data['name'],
         driverId: data['driver_id'],
-        details: data['details'] != null ? jsonDecode(data['details']) : null,
-        images: data['images'] != null ? jsonDecode(data['images']) : null,
+        details: data['details'] != null
+            ? Map<String, String>.from(jsonDecode(data['details']))
+            : null,
+        images: data['images'] != null
+            ? List<String>.from(jsonDecode(data['images']))
+            : null,
         createdAt: data['created_at'] != null
             ? MDateTime.fromString(data['created_at'])
             : null,
@@ -70,7 +74,7 @@ class TruckCollection extends Collection {
   String name;
   int? driverId;
   Map<String, String> details;
-  List images;
+  List<String> images;
   final MDateTime createdAt;
 
   TruckCollection(
@@ -89,8 +93,9 @@ class TruckCollection extends Collection {
         data['id'],
         data['name'],
         data['driver_id'],
-        Map<String, String>.from(jsonDecode(data['details'])),
-        jsonDecode(data['images']),
+        Map<String, String>.from(
+            Map<String, String>.from(jsonDecode(data['details']))),
+        List<String>.from(jsonDecode(data['images'])),
         MDateTime.fromString(data['created_at'])!,
       );
 
@@ -104,7 +109,7 @@ class TruckCollection extends Collection {
     String? name,
     int? driverId,
     Map<String, String>? details,
-    List? images,
+    List<String>? images,
   }) async {
     this.name = name ?? this.name;
     this.driverId = driverId;
