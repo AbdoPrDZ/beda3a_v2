@@ -8,7 +8,7 @@ class SettingModel extends Model {
   Migration get migration => SettingMigration();
 
   @override
-  Column get index => Column.string('name');
+  String get index => 'name';
 
   static SettingModel get instance => SettingModel();
 
@@ -20,7 +20,7 @@ class SettingModel extends Model {
     final coll = SettingCollection<T>(
       name,
       value,
-      createdAt ?? MDateTime.now(),
+      createdAt ?? MDateTime.now,
     );
     await instance.createRow(coll);
     return coll;
@@ -91,5 +91,5 @@ class SettingCollection<T> extends Collection {
       };
 
   @override
-  String toString() => jsonEncode(data);
+  String toString() => mJsonEncode(data);
 }

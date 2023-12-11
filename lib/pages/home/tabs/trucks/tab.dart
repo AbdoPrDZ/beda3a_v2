@@ -1,47 +1,49 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../src/consts/costs.dart';
-import '../../../../src/models/models.dart';
-import '../../../../src/utils/utils.dart' as utils;
-import '../../../../src/views/views.dart';
-import 'controller.dart';
+import '../../../../src/src.dart';
+import '../../controller.dart';
+import 'bloc/trucks_bloc.dart';
 
-class TrucksTab extends utils.Page<TrucksTabController> {
-  TrucksTab({Key? key}) : super(controller: TrucksTabController(), key: key);
+class TrucksTab extends BlocPage<TrucksBloc, TrucksEvent, TrucksState> {
+  TrucksTab({Key? key, required HomeController homeController})
+      : super(
+          key: key,
+          getBloc: (context) => TrucksBloc(homeController),
+        );
 
-  @override
-  TrucksTabController get controller => super.controller!;
-
-  // static Widget floatingActionButton(BuildContext context) =>
-  //     FloatingActionButton(
-  //       backgroundColor: UIThemeColors.iconBg,
-  //       onPressed: () => utils.RouteManager.to(PagesInfo.createEditTruck),
-  //       child: const Icon(Icons.fire_truck),
-  //     );
+  final searchController = TextEditController();
 
   @override
-  Widget? buildFloatingActionButton(BuildContext context) => Flex(
-        direction: Axis.vertical,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            heroTag: 'create_truck',
-            backgroundColor: UIThemeColors.iconBg,
-            onPressed: controller.createTruck,
-            child: const Icon(Icons.fire_truck),
-          ),
-          const Gap(10),
-          FloatingActionButton(
-            heroTag: 'clear_trucks',
-            backgroundColor: UIThemeColors.danger,
-            onPressed: controller.clearTrucks,
-            child: const Icon(Icons.clear_all),
-          ),
-        ],
+  Widget? buildFloatingActionButton(BuildContext context) =>
+      BlocBuilder<TrucksBloc, TrucksState>(
+        builder: (context, state) => Flex(
+          direction: Axis.vertical,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              heroTag: 'create_truck',
+              backgroundColor: UIThemeColors.iconBg,
+              onPressed: () {
+                callEvent(context, CreateTruckEvent());
+              },
+              child: const Icon(Icons.fire_truck_outlined),
+            ),
+            const Gap(10),
+            FloatingActionButton(
+              heroTag: 'clear_trucks',
+              backgroundColor: UIThemeColors.danger,
+              onPressed: () {
+                callEvent(context, ClearTruckEvent());
+              },
+              child: const Icon(Icons.clear_all),
+            ),
+          ],
+        ),
       );
 
   Widget _buildItem(BuildContext context, TruckCollection truck) => InkWell(
-        onTap: () => controller.editTruck(truck.id),
+        onTap: () => callEvent(context, EditTruckEvent(truck.id)),
         child: Container(
           margin: const EdgeInsets.symmetric(
             horizontal: 10,
@@ -50,7 +52,7 @@ class TrucksTab extends utils.Page<TrucksTabController> {
           child: Flex(
             direction: Axis.horizontal,
             children: [
-              UserAvatarView.label(utils.getNameSymbols(
+              UserAvatarView.label(getNameSymbols(
                 truck.name,
               )),
               Text.rich(
@@ -83,17 +85,38 @@ class TrucksTab extends utils.Page<TrucksTabController> {
   @override
   Widget buildBody(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: SingleChildScrollView(
-          child: StreamBuilder<List<TruckCollection>>(
-            stream: controller.trucks.stream,
-            builder: (context, snapshot) => Flex(
-              direction: Axis.vertical,
+        child: BlocBuilder<TrucksBloc, TrucksState>(
+          builder: (context, state) {
+            if (state is TrucksInitState) {
+              callEvent(context, GetTrucksEvent());
+            }
+            return Column(
               children: [
-                for (TruckCollection truck in snapshot.data ?? [])
-                  _buildItem(context, truck)
+                TextEditView(
+                  controller: searchController,
+                  onSuffixPress: () {
+                    callEvent(
+                      context,
+                      SearchTrucksEvent(searchController.text),
+                    );
+                  },
+                  suffixIcon: Icons.search,
+                  hint: 'Type to search for truck...',
+                ),
+                SingleChildScrollView(
+                  child: (state is TrucksLoadedState)
+                      ? Flex(
+                          direction: Axis.vertical,
+                          children: [
+                            for (TruckCollection truck in state.trucks)
+                              _buildItem(context, truck)
+                          ],
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
               ],
-            ),
-          ),
+            );
+          },
         ),
       );
 }

@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
 
-import '../../middlewares/auth.middleware.dart';
-import '../../services/main.service.dart';
 import '../consts/costs.dart';
 import 'page_info.dart';
 
@@ -36,26 +34,25 @@ class RouteManager {
         GetPage(
           name: pageInfo.route,
           page: pageInfo.page,
-          middlewares: [AuthMiddleware()],
-          title: pageInfo.page().pageHeaders.title,
+          middlewares: PagesInfo.appMiddleWares,
+          title: pageInfo.pageHeaders.title,
           participatesInRootNavigator:
-              pageInfo.page().pageHeaders.participatesInRootNavigator,
-          gestureWidth: pageInfo.page().pageHeaders.gestureWidth,
-          maintainState: pageInfo.page().pageHeaders.maintainState,
-          curve: pageInfo.page().pageHeaders.curve,
-          alignment: pageInfo.page().pageHeaders.alignment,
-          parameters: pageInfo.page().pageHeaders.parameters,
-          opaque: pageInfo.page().pageHeaders.opaque,
-          transitionDuration: pageInfo.page().pageHeaders.transitionDuration,
-          popGesture: pageInfo.page().pageHeaders.popGesture,
-          binding: pageInfo.page().pageHeaders.binding,
-          bindings: pageInfo.page().pageHeaders.bindings,
-          transition: pageInfo.page().pageHeaders.transition,
-          customTransition: pageInfo.page().pageHeaders.customTransition,
-          fullscreenDialog: pageInfo.page().pageHeaders.fullscreenDialog,
-          showCupertinoParallax:
-              pageInfo.page().pageHeaders.showCupertinoParallax,
-          preventDuplicates: pageInfo.page().pageHeaders.preventDuplicates,
+              pageInfo.pageHeaders.participatesInRootNavigator,
+          gestureWidth: pageInfo.pageHeaders.gestureWidth,
+          maintainState: pageInfo.pageHeaders.maintainState,
+          curve: pageInfo.pageHeaders.curve,
+          alignment: pageInfo.pageHeaders.alignment,
+          parameters: pageInfo.pageHeaders.parameters,
+          opaque: pageInfo.pageHeaders.opaque,
+          transitionDuration: pageInfo.pageHeaders.transitionDuration,
+          popGesture: pageInfo.pageHeaders.popGesture,
+          binding: pageInfo.pageHeaders.binding,
+          bindings: pageInfo.pageHeaders.bindings,
+          transition: pageInfo.pageHeaders.transition,
+          customTransition: pageInfo.pageHeaders.customTransition,
+          fullscreenDialog: pageInfo.pageHeaders.fullScreenDialog,
+          showCupertinoParallax: pageInfo.pageHeaders.showCupertinoParallax,
+          preventDuplicates: pageInfo.pageHeaders.preventDuplicates,
         ),
       );
     }

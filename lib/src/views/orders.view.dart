@@ -1,8 +1,6 @@
 import 'package:gap/gap.dart';
 
-import '../consts/costs.dart';
-import '../models/models.dart';
-import 'views.dart';
+import '../src.dart';
 
 class OrdersView extends StatelessWidget {
   final String label;
@@ -99,11 +97,8 @@ class OrdersView extends StatelessWidget {
                             CircleAvatar(
                               backgroundColor: UIThemeColors.iconBg,
                               child: Text(
-                                // getNameSymbols(
-                                '\${order.fromClient_?.fullName ?? order.fromClientId} '
-                                '\${order.toClient_?.fullName ?? order.toClientId}'
-                                // )
-                                ,
+                                getNameSymbols('${order.fromClient.fullName} '
+                                    '${order.toClient.fullName}'),
                                 style: TextStyle(
                                   color: UIThemeColors.iconFg1,
                                   fontWeight: FontWeight.bold,
@@ -122,8 +117,7 @@ class OrdersView extends StatelessWidget {
                                       ),
                                     ),
                                     TextSpan(
-                                      text:
-                                          '\${order.fromClient_?.fullName ?? order.fromClientId}\n',
+                                      text: '${order.fromClient.fullName}\n',
                                     ),
                                     TextSpan(
                                       text: 'To: ',
@@ -133,8 +127,7 @@ class OrdersView extends StatelessWidget {
                                       ),
                                     ),
                                     TextSpan(
-                                      text:
-                                          '\${order.toClient_?.fullName ?? order.toClientId}\n',
+                                      text: '${order.toClient.fullName}\n',
                                     ),
                                     TextSpan(
                                       text: 'Payloads count: ',
@@ -143,7 +136,7 @@ class OrdersView extends StatelessWidget {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    TextSpan(
+                                    const TextSpan(
                                       text: '\${order.payloads.length}',
                                     ),
                                   ],

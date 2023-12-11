@@ -4,33 +4,28 @@ import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'collection.dart';
-import 'column.dart';
+import 'table_column.dart';
 
 abstract class Migration<CollectionT extends Collection> {
   Database get database => Get.find();
 
   String get name;
 
-  List<Column> get columns;
+  List<TableColumn> get columns;
 
-  String get query {
-    String query = "CREATE TABLE `$name` (";
-    for (var i = 0; i < columns.length; i++) {
-      query += '\n  ${columns[i].query}';
-      if (i < columns.length - 1) query += ', ';
-    }
-    return "$query\n)";
-  }
+  String get query => 'CREATE TABLE `$name` (${columns.map(
+        (column) => column.query,
+      ).join(', ')})';
 
   Future migrate() async {
     dev.log('query: \n$query');
     await database.execute(query);
-    for (var collection in setupCollections()) {
+    for (var collection in setupCollections) {
       await collection;
     }
   }
 
-  List<Future<CollectionT?>> setupCollections() => [];
+  List<Future<CollectionT?>> get setupCollections => [];
 
   @override
   String toString() => name;

@@ -5,14 +5,14 @@ class PayloadMigration extends Migration {
   String get name => 'payloads';
 
   @override
-  List<Column> get columns => [
-        Column.index(),
-        Column.string('name'),
-        Column.string('category'),
-        Column.text('description'),
-        Column.text('addresses').setDefault('{}'),
-        Column.text('details').setDefault('{}'),
-        Column.text('images').setDefault('[]'),
-        Column.dateTime('created_at').autoIncrement(),
+  List<TableColumn> get columns => [
+        TableColumn.index(),
+        TableColumn.string('name'),
+        TableColumn.string('category'),
+        TableColumn.text('description'),
+        TableColumn.text('addresses').setDefault('{}'),
+        TableColumn.text('details').setDefault('{}'),
+        TableColumn.text('images').setDefault('[]'),
+        TableColumn.dateTime('created_at').autoIncrement(),
       ];
 }

@@ -19,3 +19,4 @@ export 'user_avatar.view.dart';
 export 'orders.view.dart';
 export 'order_payloads.view.dart';
 export 'expenses.view.dart';
+export 'trip_button/trip_button.view.dart';

@@ -1,12 +1,9 @@
 import 'package:gap/gap.dart';
 
-import '../../src/consts/costs.dart';
-import '../../src/models/models.dart';
-import '../../src/utils/utils.dart' as utils;
-import '../../src/views/views.dart';
+import '../../src/src.dart';
 import 'controller.dart';
 
-class CreateEditPayloadPage extends utils.Page<CreateEditPayloadController> {
+class CreateEditPayloadPage extends MPage<CreateEditPayloadController> {
   static const String name = '/create_edit_payload';
 
   CreateEditPayloadPage({Key? key})
@@ -226,29 +223,26 @@ class CreateAddressItemForm extends StatefulWidget {
 
 class _CreateDetailsItemFormState extends State<CreateAddressItemForm> {
   TextEditController addressController = TextEditController(
-    // name: 'address_name',
-    // moreSuggestions: () async {
-    //   List<String> addressSuggestions = [];
-    //   if (addressSuggestions.isEmpty) {
-    //     final clients = await ClientModel.all();
-    //     addressSuggestions = [
-    //       for (ClientModel client in clients) client.fullName,
-    //       for (ClientModel client in clients)
-    //         if (client.company != null) client.company!,
-    //     ];
-    //   }
-    //   return addressSuggestions;
-    // },
-    text: 'Alger Port',
-  );
+      // name: 'address_name',
+      // moreSuggestions: () async {
+      //   List<String> addressSuggestions = [];
+      //   if (addressSuggestions.isEmpty) {
+      //     final clients = await ClientModel.all();
+      //     addressSuggestions = [
+      //       for (ClientModel client in clients) client.fullName,
+      //       for (ClientModel client in clients)
+      //         if (client.company != null) client.company!,
+      //     ];
+      //   }
+      //   return addressSuggestions;
+      // },
+      );
   TextEditController priceController = TextEditController(
-    // name: 'address_price'
-    text: '200',
-  );
+      // name: 'address_price'
+      );
   TextEditController costController = TextEditController(
-    // name: 'address_cost',
-    text: '200',
-  );
+      // name: 'address_cost',
+      );
 
   final formKey = GlobalKey<FormState>();
 

@@ -31,7 +31,7 @@ class OrderPayloadModel extends Model {
     List<String>? images,
     MDateTime? createdAt,
   }) async {
-    createdAt = createdAt ?? MDateTime.now();
+    createdAt = createdAt ?? MDateTime.now;
     int? _id = await instance.createRow(Collection({
       'id': id,
       'payload_id': payloadId,
@@ -268,5 +268,5 @@ class OrderPayloadCollection extends Collection {
       };
 
   @override
-  String toString() => jsonEncode(data);
+  String toString() => mJsonEncode(data);
 }

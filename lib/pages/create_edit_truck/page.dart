@@ -1,15 +1,10 @@
 import 'package:gap/gap.dart';
 
-import '../../src/consts/costs.dart';
-import '../../src/consts/ui_theme.dart';
-import '../../src/models/models.dart';
-import '../../src/utils/utils.dart' as utils;
-import '../../src/utils/utils.dart';
-import '../../src/views/views.dart';
+import '../../src/src.dart';
 import '../create_edit_driver/controller.dart';
 import 'controller.dart';
 
-class CreateEditTruckPage extends utils.Page<CreateEditTruckController> {
+class CreateEditTruckPage extends MPage<CreateEditTruckController> {
   static const String name = '/create_edit_truck';
 
   CreateEditTruckPage({Key? key})
@@ -74,11 +69,7 @@ class CreateEditTruckPage extends utils.Page<CreateEditTruckController> {
                           for (DriverCollection driver in controller.drivers)
                             DropdownMenuItem(
                               value: driver.id,
-                              child: FutureBuilder<UserCollection>(
-                                  future: driver.user,
-                                  builder: (context, snapshot) {
-                                    return Text(snapshot.data?.fullName ?? '');
-                                  }),
+                              child: Text(driver.fullName),
                             ),
                         ],
                         onChanged: (value) {
@@ -92,7 +83,8 @@ class CreateEditTruckPage extends utils.Page<CreateEditTruckController> {
                       margin: const EdgeInsets.only(top: 30),
                       onPressed: () async {
                         await RouteManager.to(PagesInfo.createEditDriver);
-                        controller.getDrivers();
+                        await controller.getDrivers();
+                        controller.update();
                       },
                       size: 35,
                     ),
@@ -109,7 +101,8 @@ class CreateEditTruckPage extends utils.Page<CreateEditTruckController> {
                               driverId: controller.driverId,
                             ),
                           );
-                          controller.getDrivers();
+                          await controller.getDrivers();
+                          controller.update();
                         },
                         size: 35,
                         iconColor: UIColors.warning,

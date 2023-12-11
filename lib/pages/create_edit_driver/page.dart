@@ -1,12 +1,10 @@
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
-import '../../src/consts/costs.dart';
-import '../../src/utils/utils.dart' as utils;
-import '../../src/views/views.dart';
+import '../../src/src.dart';
 import 'controller.dart';
 
-class CreateEditDriverPage extends utils.Page<CreateEditDriverController> {
+class CreateEditDriverPage extends MPage<CreateEditDriverController> {
   static const String name = '/create_edit_driver';
 
   CreateEditDriverPage({Key? key})

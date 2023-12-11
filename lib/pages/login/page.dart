@@ -1,11 +1,7 @@
-import 'package:flutter/material.dart';
-
-import '../../src/consts/costs.dart';
-import '../../src/utils/utils.dart' as utils;
-import '../../src/views/views.dart';
+import '../../src/src.dart';
 import 'controller.dart';
 
-class LoginPage extends utils.Page<LoginController> {
+class LoginPage extends MPage<LoginController> {
   static const String name = '/login';
 
   LoginPage({Key? key}) : super(controller: LoginController(), key: key);

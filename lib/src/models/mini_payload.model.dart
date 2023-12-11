@@ -23,7 +23,7 @@ class MiniPayloadModel extends Model {
     List<String>? images,
     MDateTime? createdAt,
   }) async {
-    createdAt = createdAt ?? MDateTime.now();
+    createdAt = createdAt ?? MDateTime.now;
     int? _id = await instance.createRow(Collection({
       'id': id,
       'name': name,
@@ -34,8 +34,8 @@ class MiniPayloadModel extends Model {
       'charging_address': chargingAddress,
       'discharging_date': dischargingDate?.toString(),
       'discharging_address': dischargingAddress,
-      'details': details,
-      'images': images,
+      'details': details != null ? jsonEncode(details) : null,
+      'images': images != null ? jsonEncode(images) : null,
       'created_at': '$createdAt',
     }));
     return _id != null
@@ -193,5 +193,5 @@ class MiniPayloadCollection extends Collection {
       };
 
   @override
-  String toString() => jsonEncode(data);
+  String toString() => mJsonEncode(data);
 }

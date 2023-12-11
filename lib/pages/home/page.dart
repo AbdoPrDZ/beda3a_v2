@@ -1,12 +1,10 @@
 import 'package:gap/gap.dart';
 
-import '../../src/consts/costs.dart';
-import '../../src/utils/utils.dart' as utils;
-import '../../src/views/views.dart';
+import '../../src/src.dart';
 import 'controller.dart';
 import 'tabs/tabs.dart';
 
-class HomePage extends utils.Page<HomeController> {
+class HomePage extends MPage<HomeController> {
   static const String name = '/home';
 
   HomePage({Key? key}) : super(controller: HomeController(), key: key);
@@ -14,9 +12,9 @@ class HomePage extends utils.Page<HomeController> {
   @override
   HomeController get controller => super.controller!;
 
-  @override
-  Widget? buildFloatingActionButton(BuildContext context) =>
-      tabs[controller.currentTabIndex].buildFloatingActionButton?.call(context);
+  // @override
+  // Widget? buildFloatingActionButton(BuildContext context) =>
+  //     tabs[controller.currentTabIndex].buildFloatingActionButton?.call(context);
 
   List<DrawerItem> get tabs => [
         DrawerItem(
@@ -33,14 +31,27 @@ class HomePage extends utils.Page<HomeController> {
         DrawerItem(
           'Trucks',
           Icons.directions_bus_outlined,
-          buildTab: (context) => TrucksTab(),
+          buildTab: (context) => TrucksTab(homeController: controller),
           // buildFloatingActionButton: TrucksTab.floatingActionButton,
+        ),
+        DrawerItem(
+          'Clients',
+          Icons.groups_2_outlined,
+          buildTab: (context) => ClientsTab(),
+          // buildFloatingActionButton: ClientsTab.floatingActionButton,
         ),
         DrawerItem(
           'Payload',
           Icons.apps,
           buildTab: (context) => PayloadsTab(),
           // buildFloatingActionButton: DriversTab.floatingActionButton,
+        ),
+        DrawerItem(
+          'Trips',
+          Icons.alt_route_rounded,
+          buildTab: (context) => TripsTab(truckId: controller.selectedTruckId),
+          // buildFloatingActionButton: (context) =>
+          //     TripsTab.floatingActionButton(controller, context),
         ),
         DrawerItem(
           'Logout',
@@ -83,9 +94,7 @@ class HomePage extends utils.Page<HomeController> {
                 backgroundColor: UIThemeColors.cardBg1,
                 child: Padding(
                   padding: const EdgeInsets.all(15),
-                  child: Image.asset(
-                    Consts.logo1,
-                  ),
+                  child: Image.asset(Consts.logo1),
                 ),
               ),
             ),

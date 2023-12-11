@@ -1,29 +1,21 @@
-import 'package:beda3a_v2/src/utils/route_manager.dart';
-import 'package:gap/gap.dart';
-import 'package:get/get.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../src/consts/costs.dart';
-import '../../../../src/models/models.dart';
-import '../../../../src/utils/utils.dart' as utils;
-import '../../../../src/views/views.dart';
+import '../../../../src/src.dart';
 import '../../controller.dart';
-import 'controller.dart';
+import 'bloc/home_bloc.dart';
 
-class HomeTab extends utils.Page<HomeTabController> {
+class HomeTab extends BlocPage<HomeBloc, HomeEvent, HomeState> {
   final HomeController homeController;
-  HomeTab({Key? key, required this.homeController})
-      : super(controller: HomeTabController(), key: key);
 
-  @override
-  HomeTabController get controller => super.controller!;
+  HomeTab({Key? key, required this.homeController})
+      : super(getBloc: (context) => HomeBloc(), key: key);
 
   UserCollection? get user => homeController.user;
 
   @override
   Widget buildBody(BuildContext context) => Flex(
         direction: Axis.vertical,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             'Home',
@@ -34,19 +26,34 @@ class HomeTab extends utils.Page<HomeTabController> {
               fontSize: 50,
             ),
           ),
-          // DropDownView<TruckId?>(
-          //   value: homeController.selectedTruckId,
-          //   items: [
-          //     const DropdownMenuItem(value: null, child: Text('Select Truck')),
-          //     for (TruckModel truck in homeController.trucks)
-          //       DropdownMenuItem(value: truck.id, child: Text(truck.name)),
-          //   ],
-          //   onChanged: (value) {
-          //     homeController.selectedTruckId = value;
-          //     homeController.update();
-          //   },
-          // ),
-          const Gap(20),
+          BlocBuilder<HomeBloc, HomeState>(
+            builder: (context, state) {
+              // if (state is HomeInitState) {
+              //   callEvent(context, LoadTrucksHomeEvent());
+              // }
+              return DropDownView<int?>(
+                value: homeController.selectedTruckId,
+                items: [
+                  const DropdownMenuItem(
+                    value: null,
+                    child: Text('Select Truck'),
+                  ),
+                  for (TruckCollection truck in homeController.trucks.values)
+                    DropdownMenuItem(
+                      value: truck.id,
+                      child: Text(truck.name),
+                    ),
+                ],
+                onChanged: (value) {
+                  if (homeController.selectedTruckId != value) {
+                    homeController.selectTruck(value);
+                  }
+                },
+              );
+            },
+          ),
+          if (homeController.selectedTruckId != null)
+            TripButtonView(truckId: homeController.selectedTruckId!),
           Column(
             children: [
               Text(

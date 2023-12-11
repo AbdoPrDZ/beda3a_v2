@@ -243,6 +243,28 @@ class CirclerButtonView extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  static CirclerButtonView text(
+    String text, {
+    required Function()? onPressed,
+    TextStyle? textStyle,
+    double size = 50,
+    double borderSize = 1,
+    Color? backgroundColor,
+    Color borderColor = Colors.transparent,
+    EdgeInsets? margin,
+    EdgeInsets padding = const EdgeInsets.all(8),
+  }) =>
+      CirclerButtonView(
+        onPressed: onPressed,
+        size: size,
+        borderSize: borderSize,
+        backgroundColor: backgroundColor ?? UIThemeColors.iconBg,
+        borderColor: borderColor,
+        margin: margin,
+        padding: padding,
+        child: Text(text, style: textStyle),
+      );
+
   static CirclerButtonView icon(
     IconData icon, {
     required Function()? onPressed,

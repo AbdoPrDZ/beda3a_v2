@@ -1,11 +1,9 @@
 import 'package:get/get.dart';
 
-import '../../src/consts/ui_theme.dart';
-import '../../src/views/views.dart';
-import '../../src/utils/utils.dart' as utils;
+import '../../src/src.dart';
 import 'controller.dart';
 
-class SetupUserPage extends utils.Page<SetupUserController> {
+class SetupUserPage extends MPage<SetupUserController> {
   static const String name = '/setup_user';
 
   SetupUserPage({Key? key})

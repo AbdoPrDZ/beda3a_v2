@@ -1,10 +1,7 @@
 import 'package:get/get.dart';
 
 import '../../services/main.service.dart';
-import '../../src/consts/pages_info.dart';
-import '../../src/models/models.dart';
-import '../../src/utils/utils.dart';
-import '../../src/views/views.dart';
+import '../../src/src.dart';
 
 class SetupUserController extends GetxController {
   MainService mainService = Get.find();
@@ -26,16 +23,15 @@ class SetupUserController extends GetxController {
     text: 'abdopr47@gmail.com',
   );
   TextEditController phoneController = TextEditController(
-    // name: 'phone',
-    text: '+213778185797',
-  );
+      // name: 'phone',
+      text: '+213778185797');
   TextEditController companyController = TextEditController(
-    // name: 'company',
-    text: 'Abdo Pr',
-  );
+      // name: 'company',
+      text: 'Abdo pr');
   TextEditController addressController = TextEditController(
-      // name: 'address'
-      );
+    // name: 'address',
+    text: 'Ghardaia',
+  );
   TextEditController passwordController = TextEditController(text: '123456');
   TextEditController confirmController = TextEditController(text: '123456');
 

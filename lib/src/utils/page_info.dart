@@ -1,11 +1,15 @@
-import 'page.dart';
+import 'package:flutter/material.dart';
+
+import 'page_headers.dart';
 
 class PageInfo {
   final String route;
-  final Page Function() page;
+  final Widget Function() page;
   final bool isUnAuth;
+  final PageHeaders pageHeaders;
 
-  const PageInfo(this.route, this.page, {this.isUnAuth = false});
+  const PageInfo(this.route, this.page,
+      {this.isUnAuth = false, this.pageHeaders = const PageHeaders()});
 
   @override
   operator ==(Object other) => other is String && other == route;

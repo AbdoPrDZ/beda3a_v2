@@ -1,9 +1,7 @@
 import 'package:get/get.dart';
 
 import '../../services/main.service.dart';
-import '../../src/consts/pages_info.dart';
-import '../../src/utils/utils.dart';
-import '../../src/views/views.dart';
+import '../../src/src.dart';
 
 class LoginController extends GetxController {
   MainService mainService = Get.find();
@@ -13,14 +11,13 @@ class LoginController extends GetxController {
   Map<String, String> errors = {};
 
   TextEditController emailPhoneController = TextEditController(
-    // name: 'email, phone',
-    text: 'abdopr47@gmail.com',
-  );
-  TextEditController passwordController = TextEditController(text: '123456');
+      // name: 'email, phone',
+      );
+  TextEditController passwordController = TextEditController();
 
   login() async {
-    if (emailPhoneController.text != (await mainService.realUser)!.email &&
-        emailPhoneController.text != (await mainService.realUser)!.phone) {
+    if (emailPhoneController.text != (mainService.realUser)!.email &&
+        emailPhoneController.text != (mainService.realUser)!.phone) {
       errors['email_phone'] = 'Invalid email or phone';
     } else if (passwordController.text != mainService.userSetting!.password) {
       // } else if (Password.verify(

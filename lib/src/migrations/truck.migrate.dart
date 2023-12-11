@@ -5,12 +5,13 @@ class TruckMigration extends Migration {
   String get name => 'trucks';
 
   @override
-  List<Column> get columns => [
-        Column.index(),
-        Column.string('name'),
-        Column.integer('driver_id').nullable(),
-        Column.text('details').setDefault('{}'),
-        Column.text('images').setDefault('[]'),
-        Column.dateTime('created_at').autoIncrement(),
+  List<TableColumn> get columns => [
+        TableColumn.index(),
+        TableColumn.string('name'),
+        TableColumn.integer('driver_id').nullable(),
+        TableColumn.integer('current_trip_id').nullable(),
+        TableColumn.text('details').setDefault('{}'),
+        TableColumn.text('images').setDefault('[]'),
+        TableColumn.dateTime('created_at').autoIncrement(),
       ];
 }

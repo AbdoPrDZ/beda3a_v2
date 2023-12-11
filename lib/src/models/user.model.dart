@@ -22,7 +22,7 @@ class UserModel extends Model {
     List<String>? images,
     MDateTime? createdAt,
   }) async {
-    createdAt = createdAt ?? MDateTime.now();
+    createdAt = createdAt ?? MDateTime.now;
     int? _id = await instance.createRow(Collection({
       'id': id,
       'first_name': firstName,
@@ -32,8 +32,8 @@ class UserModel extends Model {
       'address': address,
       'company': company,
       'gender': gender,
-      'details': details,
-      'images': images,
+      'details': details != null ? jsonEncode(details) : null,
+      'images': images != null ? jsonEncode(images) : null,
       'created_at': '$createdAt',
     }));
     return _id != null
@@ -177,5 +177,5 @@ class UserCollection extends Collection {
       };
 
   @override
-  String toString() => jsonEncode(data);
+  String toString() => mJsonEncode(data);
 }

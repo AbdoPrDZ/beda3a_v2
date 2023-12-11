@@ -19,7 +19,7 @@ class PayloadModel extends Model {
     List<String>? images,
     MDateTime? createdAt,
   }) async {
-    createdAt = createdAt ?? MDateTime.now();
+    createdAt = createdAt ?? MDateTime.now;
     int? _id = await instance.createRow(Collection({
       'id': id,
       'name': name,
@@ -49,28 +49,35 @@ class PayloadModel extends Model {
     );
   }
 
-  static Future<CreateEditResult<PayloadCollection?>> createFromMap(
-          Map<String, dynamic> data) =>
-      create(
-        name: data['name'],
-        category: data['category'],
-        description: data['description'],
-        addresses: jsonDecode(data['addresses']),
-        details: data['details'] != null
-            ? Map<String, String>.from(jsonDecode(data['details']))
-            : null,
-        images: data['images'] != null
-            ? List<String>.from(jsonDecode(data['images']))
-            : null,
-        createdAt: data['created_at'] != null
-            ? MDateTime.fromString(data['created_at'])
-            : null,
-      );
+  // static Future<CreateEditResult<PayloadCollection?>> createFromMap(
+  //         Map<String, dynamic> data) =>
+  //     create(
+  //       name: data['name'],
+  //       category: data['category'],
+  //       description: data['description'],
+  //       addresses: jsonDecode(data['addresses']),
+  //       details: data['details'] != null
+  //           ? Map<String, String>.from(jsonDecode(data['details']))
+  //           : null,
+  //       images: data['images'] != null
+  //           ? List<String>.from(jsonDecode(data['images']))
+  //           : null,
+  //       createdAt: data['created_at'] != null
+  //           ? MDateTime.fromString(data['created_at'])
+  //           : null,
+  //     );
 
-  static Future<List<PayloadCollection>> all({int? limit}) async => [
-        for (var coll in await instance.allRows(limit: limit))
-          PayloadCollection.fromCollection(coll as Collection)
+  static Future<List<PayloadCollection>> allWhere({
+    WhereQuery? where,
+    int? limit,
+  }) async =>
+      [
+        for (var row in await instance.select(where: where, limit: limit))
+          PayloadCollection.fromMap(row)
       ];
+
+  static Future<List<PayloadCollection>> all({int? limit}) async =>
+      allWhere(limit: limit);
 
   static Future<PayloadCollection?> find(int id) async =>
       PayloadCollection.fromCollectionNull(await instance.findRow(id));
@@ -153,7 +160,7 @@ class PayloadCollection extends Collection {
       };
 
   @override
-  String toString() => jsonEncode(data);
+  String toString() => mJsonEncode(data);
 }
 
 class PayloadAddress {

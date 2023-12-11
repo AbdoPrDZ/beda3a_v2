@@ -3,10 +3,15 @@ import 'package:get/get.dart';
 
 import '../consts/costs.dart';
 
-abstract class Page<T extends GetxController> extends StatefulWidget {
+abstract class MPage<T extends GetxController> extends StatefulWidget {
   final T? controller;
 
-  const Page({Key? key, this.controller}) : super(key: key);
+  // late PageStatus pageStatus;
+  const MPage({
+    Key? key,
+    this.controller,
+    // this.pageStatus = PageStatus.loaded,
+  }) : super(key: key);
 
   Widget? buildDrawer() => null;
   PreferredSizeWidget? buildAppBar(BuildContext context) => null;
@@ -26,7 +31,11 @@ abstract class Page<T extends GetxController> extends StatefulWidget {
           backgroundColor: UIThemeColors.pageBackground,
           bottomNavigationBar: bottomNavigationBar(),
           appBar: buildAppBar(context),
-          body: SizedBox.expand(child: buildBody(context)),
+          body:
+              // pageStatus.isLoading
+              //     ? buildLoading(context)
+              //     :
+              SizedBox.expand(child: buildBody(context)),
           floatingActionButton: buildFloatingActionButton(context),
         );
 
@@ -42,13 +51,14 @@ abstract class Page<T extends GetxController> extends StatefulWidget {
 
   void dispose() {}
 
-  PageHeaders get pageHeaders => PageHeaders();
+  // Widget buildLoading(BuildContext context) =>
+  //     const Center(child: CircularProgressIndicator());
 
   @override
-  State<Page> createState() => _PageState();
+  State<MPage> createState() => _MPageState();
 }
 
-class _PageState extends State<Page> {
+class _MPageState extends State<MPage> {
   @override
   initState() {
     widget.initState();
@@ -66,41 +76,10 @@ class _PageState extends State<Page> {
   Widget build(BuildContext context) => widget._build(context);
 }
 
-class PageHeaders {
-  String? title;
-  bool? participatesInRootNavigator;
-  double Function(BuildContext)? gestureWidth;
-  bool maintainState;
-  Curve curve;
-  Alignment? alignment;
-  Map<String, String>? parameters;
-  bool opaque;
-  Duration? transitionDuration;
-  bool? popGesture;
-  Bindings? binding;
-  List<Bindings> bindings = const [];
-  Transition? transition;
-  CustomTransition? customTransition;
-  bool fullscreenDialog;
-  bool showCupertinoParallax;
-  bool preventDuplicates;
+enum PageStatus {
+  loading,
+  done;
 
-  PageHeaders({
-    this.title,
-    this.participatesInRootNavigator,
-    this.gestureWidth,
-    this.maintainState = true,
-    this.curve = Curves.linear,
-    this.alignment,
-    this.parameters,
-    this.opaque = true,
-    this.transitionDuration,
-    this.popGesture,
-    this.binding,
-    this.transition,
-    this.customTransition,
-    this.fullscreenDialog = false,
-    this.showCupertinoParallax = true,
-    this.preventDuplicates = true,
-  });
+  bool get isLoading => this == loading;
+  bool get isDone => this == done;
 }

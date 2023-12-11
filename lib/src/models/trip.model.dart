@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../migrations/migrations.dart';
 import '../utils/utils.dart';
+import 'order.model.dart';
 
 class TripModel extends Model {
   @override
@@ -9,49 +10,61 @@ class TripModel extends Model {
 
   static TripModel get instance => TripModel();
 
-  static Future<TripCollection?> create({
+  static Future<CreateEditResult<TripCollection?>> create({
     int? id,
+    required int truckId,
     required String from,
     required String to,
-    required double distance,
+    double? distance,
     MDateTime? startAt,
     MDateTime? endAt,
     Map<String, String>? details,
     List<String>? images,
     MDateTime? createdAt,
   }) async {
-    createdAt = createdAt ?? MDateTime.now();
+    createdAt = createdAt ?? MDateTime.now;
     int? _id = await instance.createRow(Collection({
       'id': id,
+      'truck_id': truckId,
       'from': from,
       'to': to,
       'distance': distance,
-      'start_at': startAt,
-      'end_at': endAt,
-      'details': details,
-      'images': images,
+      'start_at': startAt?.toString(),
+      'end_at': endAt?.toString(),
+      'details': details != null ? jsonEncode(details) : null,
+      'images': images != null ? jsonEncode(images) : null,
       'created_at': '$createdAt',
     }));
-    return _id != null
-        ? TripCollection(
-            _id,
-            from,
-            to,
-            distance,
-            startAt,
-            endAt,
-            details ?? {},
-            images ?? [],
-            createdAt,
-          )
-        : null;
+
+    return CreateEditResult(
+      _id != null,
+      result: _id != null
+          ? TripCollection(
+              _id,
+              truckId,
+              from,
+              to,
+              distance,
+              startAt,
+              endAt,
+              details ?? {},
+              images ?? [],
+              createdAt,
+            )
+          : null,
+    );
   }
 
-  static Future<TripCollection?> createFromMap(Map<String, dynamic> data) =>
+  static Future<CreateEditResult<TripCollection?>> createFromMap(
+    Map<String, dynamic> data,
+  ) =>
       create(
+        truckId: data['truck_id'],
         from: data['from'],
         to: data['to'],
-        distance: data['distance'],
+        distance: data['distance'] != null
+            ? double.parse(data['distance'].toString())
+            : null,
         startAt: data['start_at'] != null
             ? MDateTime.fromString(data['start_at'])
             : null,
@@ -69,20 +82,35 @@ class TripModel extends Model {
             : null,
       );
 
-  static Future<List<TripCollection>> all({int? limit}) async => [
-        for (var coll in await instance.allRows(limit: limit))
-          TripCollection.fromCollection(coll as Collection)
+  // static Future<List<TripCollection>> all({int? limit}) async => [
+  //       for (var coll in await instance.allRows(limit: limit))
+  //         TripCollection.fromCollection(coll as Collection)
+  //     ];
+
+  static Future<List<TripCollection>> allWhere({
+    WhereQuery? where,
+    int? limit,
+  }) async =>
+      [
+        for (var row in await instance.select(
+          where: where,
+          limit: limit,
+        ))
+          TripCollection.fromMap(row)
       ];
 
   static Future<TripCollection?> find(int id) async =>
       TripCollection.fromCollectionNull(await instance.findRow(id));
+
+  static Future clear() async => instance.deleteWhere();
 }
 
 class TripCollection extends Collection {
   final int id;
+  final int truckId;
   String from;
   String to;
-  double distance;
+  double? distance;
   MDateTime? startAt;
   MDateTime? endAt;
   Map<String, String> details;
@@ -91,6 +119,7 @@ class TripCollection extends Collection {
 
   TripCollection(
     this.id,
+    this.truckId,
     this.from,
     this.to,
     this.distance,
@@ -103,11 +132,16 @@ class TripCollection extends Collection {
 
   static TripCollection fromMap(Map<String, dynamic> data) => TripCollection(
         data['id'],
+        data['truck_id'],
         data['from'],
         data['to'],
-        double.parse(data['distance'].toString()),
-        MDateTime.fromString(data['start_at'])!,
-        MDateTime.fromString(data['end_at'])!,
+        data['distance'] != null
+            ? double.parse(data['distance'].toString())
+            : null,
+        data['start_at'] != null
+            ? MDateTime.fromString(data['start_at'])
+            : null,
+        data['end_at'] != null ? MDateTime.fromString(data['end_at']) : null,
         Map<String, String>.from(jsonDecode(data['details'])),
         List<String>.from(jsonDecode(data['images'])),
         MDateTime.fromString(data['created_at'])!,
@@ -119,7 +153,7 @@ class TripCollection extends Collection {
   static TripCollection? fromCollectionNull(Collection? collection) =>
       collection != null ? fromMap(collection.data) : null;
 
-  Future<int> update({
+  Future<CreateEditResult<int>> update({
     String? from,
     String? to,
     double? distance,
@@ -127,14 +161,40 @@ class TripCollection extends Collection {
     MDateTime? endAt,
     Map<String, String>? details,
     List<String>? images,
-  }) {
+  }) async {
     this.from = from ?? this.from;
     this.to = to ?? this.to;
-    this.distance = distance ?? this.distance;
+    this.distance = distance;
     this.startAt = startAt;
     this.endAt = endAt;
     this.details = details ?? this.details;
     this.images = images ?? this.images;
+    return CreateEditResult(true, result: await save());
+  }
+
+  Future<List<OrderCollection>> get orders => OrderModel.allWhere(
+        where: WhereQuery.create(
+          WhereQueryItemCondition.equals(column: 'orders.trip_id', value: id),
+        ),
+      );
+
+  Future<int> start() async {
+    if (startAt != null) {
+      throw Exception("This trip is already started");
+    } else if ((await orders).isEmpty) {
+      throw Exception("Can't start trip without orders");
+    }
+    startAt = MDateTime.now;
+    return await save();
+  }
+
+  Future<int> end() {
+    if (startAt == null) {
+      throw Exception("Can't end this trip without start it");
+    } else if (endAt != null) {
+      throw Exception("This trip is already ended");
+    }
+    endAt = MDateTime.now;
     return save();
   }
 
@@ -145,6 +205,7 @@ class TripCollection extends Collection {
   @override
   Map<String, dynamic> get data => {
         'id': id,
+        'truck_id': truckId,
         'from': from,
         'to': to,
         'distance': distance,
@@ -156,5 +217,5 @@ class TripCollection extends Collection {
       };
 
   @override
-  String toString() => jsonEncode(data);
+  String toString() => mJsonEncode(data);
 }

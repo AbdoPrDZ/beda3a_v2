@@ -5,12 +5,12 @@ class DriverMigration extends Migration {
   String get name => 'drivers';
 
   @override
-  List<Column> get columns => [
-        Column.index(),
-        Column.integer('user_id'),
+  List<TableColumn> get columns => [
+        TableColumn.index(),
+        TableColumn.integer('user_id'),
         // Column.string('username'),
-        Column.text('details').setDefault('{}'),
-        Column.text('images').setDefault('[]'),
-        Column.dateTime('created_at').autoIncrement(),
+        TableColumn.text('details').setDefault('{}'),
+        TableColumn.text('images').setDefault('[]'),
+        TableColumn.dateTime('created_at').autoIncrement(),
       ];
 }

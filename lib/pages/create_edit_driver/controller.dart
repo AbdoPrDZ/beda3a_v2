@@ -1,9 +1,7 @@
 import 'package:get/get.dart';
 
-import '../../src/models/models.dart';
 import '../../services/main.service.dart';
-import '../../src/utils/utils.dart';
-import '../../src/views/views.dart';
+import '../../src/src.dart';
 
 class CreateEditDriverController extends GetxController {
   MainService mainService = Get.find();
@@ -17,16 +15,16 @@ class CreateEditDriverController extends GetxController {
 
   TextEditController firstNameController = TextEditController(
       // name: 'driver_first_name'
-      text: 'Driver');
+      );
   TextEditController lastNameController = TextEditController(
       // name: 'driver_last_name'
-      text: '1');
+      );
   TextEditController phoneController = TextEditController(
       // name: 'driver_phone'
-      text: '+2130000001');
+      );
   TextEditController emailController = TextEditController(
       // name: 'driver_email'
-      text: 'driver1@gmail.com');
+      );
   TextEditController addressController = TextEditController(
       // name: 'driver_address'
       );
@@ -39,13 +37,19 @@ class CreateEditDriverController extends GetxController {
     if (pageData.action.isEdit) {
       DriverModel.find(pageData.driverId!).then((driver) async {
         oldDriver = driver;
-        final driverUser = await driver!.user;
-        firstNameController.text = driverUser.firstName;
-        lastNameController.text = driverUser.lastName;
-        phoneController.text = driverUser.phone;
-        emailController.text = driverUser.email ?? '';
-        addressController.text = driverUser.address ?? '';
-        gander = driverUser.gender;
+        // final driverUser = await driver!.user;
+        // firstNameController.text = driverUser.firstName;
+        firstNameController.text = oldDriver!.firstName;
+        // lastNameController.text = driverUser.lastName;
+        lastNameController.text = oldDriver!.lastName;
+        // phoneController.text = driverUser.phone;
+        phoneController.text = oldDriver!.phone;
+        // emailController.text = driverUser.email ?? '';
+        emailController.text = oldDriver!.email ?? '';
+        // addressController.text = driverUser.address ?? '';
+        addressController.text = oldDriver!.address ?? '';
+        // gander = driverUser.gender;
+        gander = oldDriver!.gender;
         update();
       });
     }

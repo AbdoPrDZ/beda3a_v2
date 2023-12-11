@@ -1,9 +1,7 @@
 import 'package:get/get.dart';
 
-import '../../src/models/models.dart';
 import '../../services/main.service.dart';
-import '../../src/utils/utils.dart';
-import '../../src/views/views.dart';
+import '../../src/src.dart';
 
 class CreateEditPayloadController extends GetxController {
   MainService mainService = Get.find();
@@ -18,17 +16,14 @@ class CreateEditPayloadController extends GetxController {
   Map<String, String> errors = {};
 
   TextEditController nameController = TextEditController(
-    // name: 'payload_name'
-    text: 'Polyester',
-  );
+      // name: 'payload_name'
+      );
   TextEditController categoryController = TextEditController(
-    // name: 'payload_category',
-    text: 'Thread',
-  );
+      // name: 'payload_category',
+      );
   TextEditController descriptionController = TextEditController(
-    // name: 'payload_description',
-    text: '150',
-  );
+      // name: 'payload_description',
+      );
   Map<String, PayloadAddress> addresses = {};
   Map<String, String> details = {};
 

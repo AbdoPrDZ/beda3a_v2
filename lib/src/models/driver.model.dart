@@ -12,15 +12,15 @@ class DriverModel extends Model {
 
   static Future<DriverCollection?> create({
     int? id,
-    required int userId,
+    required UserCollection user,
     Map<String, String>? details,
     List<String>? images,
     MDateTime? createdAt,
   }) async {
-    createdAt = createdAt ?? MDateTime.now();
+    createdAt = createdAt ?? MDateTime.now;
     int? _id = await instance.createRow(Collection({
       'id': id,
-      'user_id': userId,
+      'user_id': user.id,
       // 'username': username,
       'details': details != null ? jsonEncode(details) : null,
       'images': images != null ? jsonEncode(images) : null,
@@ -29,8 +29,15 @@ class DriverModel extends Model {
     return _id != null
         ? DriverCollection(
             _id,
-            userId,
+            user.id,
             // username,
+            user.firstName,
+            user.lastName,
+            user.phone,
+            user.email,
+            user.address,
+            user.company,
+            user.gender,
             details ?? {},
             images ?? [],
             createdAt,
@@ -52,7 +59,7 @@ class DriverModel extends Model {
     List<String>? images,
     MDateTime? createdAt,
   }) async {
-    createdAt = createdAt ?? MDateTime.now();
+    createdAt = createdAt ?? MDateTime.now;
     UserCollection _user = (await UserModel.create(
       id: userId,
       firstName: firstName,
@@ -68,7 +75,7 @@ class DriverModel extends Model {
       true,
       result: await create(
         id: id,
-        userId: _user.id,
+        user: _user,
         details: details,
         images: images,
         createdAt: createdAt,
@@ -78,7 +85,7 @@ class DriverModel extends Model {
 
   static Future<DriverCollection?> createFromMap(Map<String, dynamic> data) =>
       create(
-        userId: data['user_id'],
+        user: UserCollection.fromMap(data['user']),
         // username: data['username'],
         details: data['details'] != null
             ? Map<String, String>.from(jsonDecode(data['details']))
@@ -91,13 +98,50 @@ class DriverModel extends Model {
             : null,
       );
 
-  static Future<List<DriverCollection>> all({int? limit}) async => [
-        for (var coll in await instance.allRows(limit: limit))
-          DriverCollection.fromCollection(coll as Collection)
+  static List<SelectJoin> get selectJoins => [
+        SelectJoin(
+          'users',
+          columns: {
+            'id': 'user_id',
+            'first_name': null,
+            'last_name': null,
+            'phone': null,
+            'email': null,
+            'address': null,
+            'company': null,
+            'gender': null,
+          },
+          where: WhereQuery.create(
+            WhereQueryItemCondition.equals(
+              column: 'drivers.user_id',
+              value: '`users`.`id`',
+              addQuotesIfString: false,
+            ),
+            isOnQuery: true,
+          ),
+        )
       ];
 
+  static Future<List<DriverCollection>> allWhere({
+    WhereQuery? where,
+    int? limit,
+  }) async =>
+      [
+        for (var row in await instance.select(
+          selectJoins: selectJoins,
+          where: where,
+          limit: limit,
+        ))
+          DriverCollection.fromMap(row)
+      ];
+
+  // static Future<List<DriverCollection>> all({int? limit}) async =>
+  //     allWhere(limit: limit);
+
   static Future<DriverCollection?> find(int id) async =>
-      DriverCollection.fromCollectionNull(await instance.findRow(id));
+      DriverCollection.fromCollectionNull(
+        await instance.findRow(id, selectJoins: selectJoins),
+      );
 
   static Future clear() async => instance.deleteWhere();
 }
@@ -106,6 +150,13 @@ class DriverCollection extends Collection {
   final int id;
   final int userId;
   // String username;
+  String firstName;
+  String lastName;
+  String phone;
+  String? email;
+  String? address;
+  String? company;
+  String gender;
   Map<String, String> details;
   List<String> images;
   final MDateTime createdAt;
@@ -114,18 +165,34 @@ class DriverCollection extends Collection {
     this.id,
     this.userId,
     // this.username,
+    this.firstName,
+    this.lastName,
+    this.phone,
+    this.email,
+    this.address,
+    this.company,
+    this.gender,
     this.details,
     this.images,
     this.createdAt,
   ) : super({});
 
-  Future<UserCollection> get user async => (await UserModel.find(userId))!;
+  // Future<UserCollection> get user async => (await UserModel.find(userId))!;
+
+  String get fullName => '$firstName $lastName';
 
   static DriverCollection fromMap(Map<String, dynamic> data) =>
       DriverCollection(
         data['id'],
         data['user_id'],
         // data['username'],
+        data['first_name'],
+        data['last_name'],
+        data['phone'],
+        data['email'],
+        data['address'],
+        data['company'],
+        data['gender'],
         Map<String, String>.from(jsonDecode(data['details'])),
         List<String>.from(jsonDecode(data['images'])),
         MDateTime.fromString(data['created_at'])!,
@@ -148,15 +215,16 @@ class DriverCollection extends Collection {
     Map<String, String>? details,
     List<String>? images,
   }) async {
-    await (await user).update(
-      firstName: firstName,
-      lastName: lastName,
-      phone: phone,
-      email: email,
-      address: address,
-      company: company,
-      gender: gender,
-    );
+    // await (await user).update(
+    await UserModel.instance.updateRow(userId, {
+      'firstName': firstName,
+      'lastName': lastName,
+      'phone': phone,
+      'email': email,
+      'address': address,
+      'company': company,
+      'gender': gender,
+    });
     this.details = details ?? this.details;
     this.images = images ?? this.images;
     return CreateEditResult(true, result: await save());
@@ -177,5 +245,16 @@ class DriverCollection extends Collection {
       };
 
   @override
-  String toString() => jsonEncode(data);
+  String toString() => mJsonEncode({
+        ...data,
+        'user': {
+          'firstName': firstName,
+          'lastName': lastName,
+          'phone': phone,
+          'email': email,
+          'address': address,
+          'company': company,
+          'gender': gender,
+        }
+      });
 }

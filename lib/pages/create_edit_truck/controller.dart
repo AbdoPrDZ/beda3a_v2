@@ -1,9 +1,7 @@
 import 'package:get/get.dart';
 
 import '../../services/main.service.dart';
-import '../../src/models/models.dart';
-import '../../src/utils/utils.dart';
-import '../../src/views/views.dart';
+import '../../src/src.dart';
 
 class CreateEditTruckController extends GetxController {
   MainService mainService = Get.find();
@@ -18,29 +16,30 @@ class CreateEditTruckController extends GetxController {
 
   int? truckId;
   TextEditController nameController = TextEditController(
-    // name: 'truck_name'
-    text: 'Official Truck',
-  );
+      // name: 'truck_name'
+      // text: 'Official Truck',
+      );
   List<DriverCollection> drivers = [];
   int? driverId;
   // List<ExpensesModel> expenses = [];
   Map<String, String> details = {};
 
   Future getDrivers() async {
-    drivers = await DriverModel.all();
+    drivers = await DriverModel.allWhere();
     // drivers = drivers.where((driver) => driver.currentTripId == null).toList();
     if (driverId != null &&
-        ![for (var driver in drivers) driver.id].contains(driverId)) {
+        ![
+          for (var driver in drivers) driver.id,
+        ].contains(driverId)) {
       driverId = null;
     }
-    update();
   }
 
   @override
   void onInit() {
-    getDrivers();
     if (pageData.action.isEdit) {
       TruckModel.find(pageData.truckId!).then((truck) async {
+        await getDrivers();
         oldTruck = truck;
         truckId = truck!.id;
         nameController.text = truck.name;
@@ -50,6 +49,7 @@ class CreateEditTruckController extends GetxController {
         update();
       });
     } else {
+      getDrivers().then((value) => update());
       // TruckModel.nextId().then((truckId) => this.truckId = truckId);
     }
     super.onInit();
@@ -94,7 +94,7 @@ class CreateEditTruckController extends GetxController {
       DialogsView.loading().show();
       final result = await oldTruck!.update(
         name: getFieldData(nameController)!,
-        // driverId: driverId,
+        driverId: driverId,
         // expenses: expenses,
         details: details,
       );

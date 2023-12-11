@@ -1,12 +1,9 @@
-// import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-import '../../src/consts/costs.dart';
-import '../../src/utils/utils.dart' as utils;
+import '../../src/src.dart';
 import 'controller.dart';
 
-class LoadingPage extends utils.Page<LoadingController> {
+class LoadingPage extends MPage<LoadingController> {
   static const String name = '/loading';
 
   LoadingPage({Key? key}) : super(controller: LoadingController(), key: key);

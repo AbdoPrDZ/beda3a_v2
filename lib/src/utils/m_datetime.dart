@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class MDateTime extends DateTime {
-  final String format;
+  String format;
 
   MDateTime(
     int year, {
@@ -66,7 +66,33 @@ class MDateTime extends DateTime {
     }
   }
 
-  factory MDateTime.now() => MDateTime.fromDate(DateTime.now());
+  static MDateTime get now => MDateTime.fromDate(DateTime.now());
+
+  static MDateTime get zero => MDateTime(0);
+
+  static Stream<MDateTime> streamNow({
+    Duration dailyDuration = const Duration(seconds: 1),
+  }) async* {
+    while (true) {
+      yield MDateTime.now;
+      await Future.delayed(dailyDuration);
+    }
+  }
+
+  setFormat(String format) {
+    this.format = format;
+  }
+
+  MDateTime operator -(MDateTime other) => MDateTime(
+        year - other.year,
+        month: month - other.month,
+        day: day - other.day,
+        hour: hour - other.hour,
+        minute: minute - other.minute,
+        second: second - other.second,
+        millisecond: millisecond - other.millisecond,
+        microsecond: microsecond - other.microsecond,
+      );
 
   @override
   String toString() => DateFormat(format).format(this);

@@ -5,13 +5,13 @@ class ExpenseMigration extends Migration {
   String get name => 'expenses';
 
   @override
-  List<Column> get columns => [
-        Column.index(),
-        Column.string('name'),
-        Column.string('address'),
-        Column.double('cost'),
-        Column.text('details').setDefault('{}'),
-        Column.text('images').setDefault('[]'),
-        Column.dateTime('created_at').autoIncrement(),
+  List<TableColumn> get columns => [
+        TableColumn.index(),
+        TableColumn.string('name'),
+        TableColumn.string('address'),
+        TableColumn.double('cost'),
+        TableColumn.text('details').setDefault('{}'),
+        TableColumn.text('images').setDefault('[]'),
+        TableColumn.dateTime('created_at').autoIncrement(),
       ];
 }

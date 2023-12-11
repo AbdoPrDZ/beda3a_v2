@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 import 'migration.dart';
 
 export 'migration.dart';
-export 'column.dart';
+export 'table_column.dart';
 export 'column_type.dart';
 export 'model.dart';
 export 'collection.dart';

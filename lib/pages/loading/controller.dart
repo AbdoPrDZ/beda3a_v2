@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 import '../../services/main.service.dart';
-import '../../src/utils/utils.dart';
+import '../../src/src.dart';
 
 class LoadingController extends GetxController {
   MainService mainService = Get.find();
@@ -13,7 +13,7 @@ class LoadingController extends GetxController {
   }
 
   void loading() async {
-    await Future.delayed(Duration(seconds: 3));
-    RouteManager.to(mainService.next(), clearHeaders: true);
+    await Future.delayed(const Duration(seconds: 2));
+    RouteManager.to(await mainService.next(), clearHeaders: true);
   }
 }

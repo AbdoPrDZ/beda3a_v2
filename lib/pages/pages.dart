@@ -5,3 +5,6 @@ export 'home/page.dart';
 export 'create_edit_truck/page.dart';
 export 'create_edit_driver/page.dart';
 export 'create_edit_payload/page.dart';
+export 'create_edit_client/page.dart';
+export 'create_edit_trip/page.dart';
+export 'create_edit_order/page.dart';

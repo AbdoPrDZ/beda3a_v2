@@ -1,6 +1,6 @@
 import 'column_type.dart';
 
-class Column {
+class TableColumn {
   final String name;
   final ColumnType type;
   int? length;
@@ -11,7 +11,7 @@ class Column {
   dynamic defaultValue;
   bool setNullAsDefault;
 
-  Column(
+  TableColumn(
     this.name, {
     required this.type,
     this.length,
@@ -23,12 +23,12 @@ class Column {
     this.setNullAsDefault = false,
   });
 
-  static Column index({
+  static TableColumn index({
     String name = 'id',
     ColumnType type = ColumnType.integer,
     int? length,
   }) =>
-      Column(
+      TableColumn(
         name,
         type: type,
         length: length,
@@ -37,14 +37,14 @@ class Column {
         isUnique: true,
       );
 
-  static Column char(
+  static TableColumn char(
     String name, {
     bool isUnique = false,
     bool isNullable = false,
     dynamic defaultValue,
     bool setNullAsDefault = false,
   }) =>
-      Column(
+      TableColumn(
         name,
         type: ColumnType.char,
         isUnique: isUnique,
@@ -53,7 +53,7 @@ class Column {
         setNullAsDefault: setNullAsDefault,
       );
 
-  static Column string(
+  static TableColumn string(
     String name, {
     int? length = 255,
     bool isUnique = false,
@@ -61,7 +61,7 @@ class Column {
     dynamic defaultValue,
     bool setNullAsDefault = false,
   }) =>
-      Column(
+      TableColumn(
         name,
         type: ColumnType.varChar,
         length: length,
@@ -71,7 +71,7 @@ class Column {
         setNullAsDefault: setNullAsDefault,
       );
 
-  static Column text(
+  static TableColumn text(
     String name, {
     int? length,
     bool isUnique = false,
@@ -79,7 +79,7 @@ class Column {
     dynamic defaultValue,
     bool setNullAsDefault = false,
   }) =>
-      Column(
+      TableColumn(
         name,
         type: ColumnType.text,
         length: length,
@@ -89,7 +89,7 @@ class Column {
         setNullAsDefault: setNullAsDefault,
       );
 
-  static Column integer(
+  static TableColumn integer(
     String name, {
     int? length = 100,
     bool isUnique = false,
@@ -98,7 +98,7 @@ class Column {
     bool setNullAsDefault = false,
     bool isAutoIncrement = false,
   }) =>
-      Column(
+      TableColumn(
         name,
         type: ColumnType.integer,
         length: length,
@@ -109,7 +109,7 @@ class Column {
         isAutoIncrement: isAutoIncrement,
       );
 
-  static Column long(
+  static TableColumn long(
     String name, {
     int? length,
     bool isUnique = false,
@@ -117,7 +117,7 @@ class Column {
     dynamic defaultValue,
     bool setNullAsDefault = false,
   }) =>
-      Column(
+      TableColumn(
         name,
         type: ColumnType.long,
         length: length,
@@ -127,7 +127,7 @@ class Column {
         setNullAsDefault: setNullAsDefault,
       );
 
-  static Column short(
+  static TableColumn short(
     String name, {
     int? length,
     bool isUnique = false,
@@ -135,7 +135,7 @@ class Column {
     dynamic defaultValue,
     bool setNullAsDefault = false,
   }) =>
-      Column(
+      TableColumn(
         name,
         type: ColumnType.short,
         length: length,
@@ -145,7 +145,7 @@ class Column {
         setNullAsDefault: setNullAsDefault,
       );
 
-  static Column real(
+  static TableColumn real(
     String name, {
     int? length,
     bool isUnique = false,
@@ -153,7 +153,7 @@ class Column {
     dynamic defaultValue,
     bool setNullAsDefault = false,
   }) =>
-      Column(
+      TableColumn(
         name,
         type: ColumnType.real,
         length: length,
@@ -163,7 +163,7 @@ class Column {
         setNullAsDefault: setNullAsDefault,
       );
 
-  static Column double(
+  static TableColumn double(
     String name, {
     int? length,
     bool isUnique = false,
@@ -171,7 +171,7 @@ class Column {
     dynamic defaultValue,
     bool setNullAsDefault = false,
   }) =>
-      Column(
+      TableColumn(
         name,
         type: ColumnType.double,
         length: length,
@@ -181,7 +181,7 @@ class Column {
         setNullAsDefault: setNullAsDefault,
       );
 
-  static Column boolean(
+  static TableColumn boolean(
     String name, {
     int? length,
     bool isUnique = false,
@@ -189,7 +189,7 @@ class Column {
     dynamic defaultValue,
     bool setNullAsDefault = false,
   }) =>
-      Column(
+      TableColumn(
         name,
         type: ColumnType.boolean,
         length: length,
@@ -199,7 +199,7 @@ class Column {
         setNullAsDefault: setNullAsDefault,
       );
 
-  static Column date(
+  static TableColumn date(
     String name, {
     bool isUnique = false,
     bool isNullable = false,
@@ -207,7 +207,7 @@ class Column {
     bool setNullAsDefault = false,
     bool isAutoIncrement = false,
   }) =>
-      Column(
+      TableColumn(
         name,
         type: ColumnType.date,
         isUnique: isUnique,
@@ -217,7 +217,7 @@ class Column {
         isAutoIncrement: isAutoIncrement,
       );
 
-  static Column time(
+  static TableColumn time(
     String name, {
     bool isUnique = false,
     bool isNullable = false,
@@ -225,7 +225,7 @@ class Column {
     bool setNullAsDefault = false,
     bool isAutoIncrement = false,
   }) =>
-      Column(
+      TableColumn(
         name,
         type: ColumnType.time,
         isUnique: isUnique,
@@ -235,7 +235,7 @@ class Column {
         isAutoIncrement: isAutoIncrement,
       );
 
-  static Column dateTime(
+  static TableColumn dateTime(
     String name, {
     bool isUnique = false,
     bool isNullable = false,
@@ -243,7 +243,7 @@ class Column {
     bool setNullAsDefault = false,
     bool isAutoIncrement = false,
   }) =>
-      Column(
+      TableColumn(
         name,
         type: ColumnType.dateTime,
         isUnique: isUnique,
@@ -253,13 +253,13 @@ class Column {
         isAutoIncrement: isAutoIncrement,
       );
 
-  static Column check(
+  static TableColumn check(
     String name,
     List<String> values, {
     dynamic defaultValue,
     bool isNullable = false,
   }) =>
-      Column(
+      TableColumn(
         name,
         type: ColumnType.check(name, values),
         defaultValue: defaultValue,
@@ -292,33 +292,33 @@ class Column {
     return query;
   }
 
-  Column setLength(int length) {
+  TableColumn setLength(int length) {
     this.length = length;
     return this;
   }
 
-  Column setDefault(dynamic value, {bool asNull = false}) {
+  TableColumn setDefault(dynamic value, {bool asNull = false}) {
     defaultValue = value;
     setNullAsDefault = asNull;
     return this;
   }
 
-  Column autoIncrement({bool isAutoIncrement = true}) {
+  TableColumn autoIncrement({bool isAutoIncrement = true}) {
     this.isAutoIncrement = isAutoIncrement;
     return this;
   }
 
-  Column unique({bool isUnique = true}) {
+  TableColumn unique({bool isUnique = true}) {
     this.isUnique = isUnique;
     return this;
   }
 
-  Column nullable({bool isNullable = true}) {
+  TableColumn nullable({bool isNullable = true}) {
     this.isNullable = isNullable;
     return this;
   }
 
-  Column primary({bool isPrimary = true}) {
+  TableColumn primary({bool isPrimary = true}) {
     this.isPrimary = isPrimary;
     return this;
   }

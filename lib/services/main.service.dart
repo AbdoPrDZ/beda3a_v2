@@ -1,8 +1,6 @@
 import 'package:get/get.dart';
 
-import '../src/consts/costs.dart';
-import '../src/models/models.dart';
-import '../src/utils/utils.dart';
+import '../src/src.dart';
 import 'database.service.dart';
 
 class UserSetting extends SettingCollection<Map> {
@@ -55,12 +53,14 @@ class UserSetting extends SettingCollection<Map> {
 
 class MainService extends GetxService {
   UserSetting? userSetting;
-  Future<UserCollection?>? get realUser => userSetting?.realUser;
+  UserCollection? realUser;
+
   bool get unHaveUser => userSetting?.userId == null;
   bool get isAuth => userSetting != null ? userSetting!.isAuth : false;
-
   UIThemeMode get themeMode =>
       userSetting != null ? userSetting!.themeMode : UIThemeMode.light;
+
+  AppDatabase? get appDatabase => Get.find<DatabaseService>().appDatabase;
 
   Future fastInit() async {
     DatabaseService databaseService = Get.put(DatabaseService());
@@ -69,7 +69,8 @@ class MainService extends GetxService {
     print(userSetting);
   }
 
-  PageInfo next() {
+  Future<PageInfo> next() async {
+    realUser = await (userSetting!.realUser);
     if (userSetting!.userId == null) {
       return PagesInfo.onUnHaveUser;
     } else if (userSetting!.isAuth) {
@@ -79,16 +80,18 @@ class MainService extends GetxService {
     }
   }
 
-  Future setupUser(UserCollection user, String password) {
+  Future setupUser(UserCollection user, String password) async {
     userSetting!.userId = user.id;
     userSetting!.password = password;
     userSetting!.isAuth = true;
-    return userSetting!.save();
+    realUser = await (userSetting!.realUser);
+    await userSetting!.save();
   }
 
-  Future onAuth() {
+  Future onAuth() async {
+    realUser = await (userSetting!.realUser);
     userSetting!.isAuth = true;
-    return userSetting!.save();
+    await userSetting!.save();
   }
 
   Future logout() async {

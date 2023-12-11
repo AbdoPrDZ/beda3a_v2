@@ -5,15 +5,16 @@ class TripMigration extends Migration {
   String get name => 'trips';
 
   @override
-  List<Column> get columns => [
-        Column.index(),
-        Column.string('from'),
-        Column.string('to'),
-        Column.double('distance'),
-        Column.dateTime('start_at').nullable(),
-        Column.dateTime('end_at').nullable(),
-        Column.text('details').setDefault('{}'),
-        Column.text('images').setDefault('[]'),
-        Column.dateTime('created_at').autoIncrement(),
+  List<TableColumn> get columns => [
+        TableColumn.index(),
+        TableColumn.integer('truck_id'),
+        TableColumn.string('from'),
+        TableColumn.string('to'),
+        TableColumn.double('distance').nullable(),
+        TableColumn.dateTime('start_at').nullable(),
+        TableColumn.dateTime('end_at').nullable(),
+        TableColumn.text('details').setDefault('{}'),
+        TableColumn.text('images').setDefault('[]'),
+        TableColumn.dateTime('created_at').autoIncrement(),
       ];
 }

@@ -1,3 +1,6 @@
+import 'package:get/get.dart';
+
+import '../../middlewares/auth.middleware.dart';
 import '../../pages/pages.dart';
 import '../utils/utils.dart';
 
@@ -14,8 +17,14 @@ class PagesInfo {
             PageInfo(CreateEditTruckPage.name, () => CreateEditTruckPage()),
         CreateEditDriverPage.name:
             PageInfo(CreateEditDriverPage.name, () => CreateEditDriverPage()),
+        CreateEditClientPage.name:
+            PageInfo(CreateEditClientPage.name, () => CreateEditClientPage()),
         CreateEditPayloadPage.name:
             PageInfo(CreateEditPayloadPage.name, () => CreateEditPayloadPage()),
+        CreateEditTripPage.name:
+            PageInfo(CreateEditTripPage.name, () => CreateEditTripPage()),
+        CreateEditOrderPage.name:
+            PageInfo(CreateEditOrderPage.name, () => CreateEditOrderPage()),
       };
 
   static List<String> get unAuthPages => [
@@ -31,10 +40,15 @@ class PagesInfo {
   static PageInfo get home => pages[HomePage.name]!;
   static PageInfo get createEditTruck => pages[CreateEditTruckPage.name]!;
   static PageInfo get createEditDriver => pages[CreateEditDriverPage.name]!;
+  static PageInfo get createEditClient => pages[CreateEditClientPage.name]!;
   static PageInfo get createEditPayload => pages[CreateEditPayloadPage.name]!;
+  static PageInfo get createEditTrip => pages[CreateEditTripPage.name]!;
+  static PageInfo get createEditOrder => pages[CreateEditOrderPage.name]!;
 
   static PageInfo initialPage = loading;
   static PageInfo onAuthPage = home;
   static PageInfo onUnAuth = login;
   static PageInfo onUnHaveUser = setupUser;
+
+  static List<GetMiddleware> appMiddleWares = [AuthMiddleware()];
 }

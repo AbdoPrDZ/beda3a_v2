@@ -18,14 +18,14 @@ class ExpenseModel extends Model {
     List<String>? images,
     MDateTime? createdAt,
   }) async {
-    createdAt = createdAt ?? MDateTime.now();
+    createdAt = createdAt ?? MDateTime.now;
     int? _id = await instance.createRow(Collection({
       'id': id,
       'name': name,
       'address': address,
       'cost': cost,
-      'details': details,
-      'images': images,
+      'details': details != null ? jsonEncode(details) : null,
+      'images': images != null ? jsonEncode(images) : null,
       'created_at': '$createdAt',
     }));
     return _id != null
@@ -133,5 +133,5 @@ class ExpenseCollection extends Collection {
       };
 
   @override
-  String toString() => jsonEncode(data);
+  String toString() => mJsonEncode(data);
 }

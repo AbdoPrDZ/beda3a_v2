@@ -5,12 +5,13 @@ class OrderMigration extends Migration {
   String get name => 'orders';
 
   @override
-  List<Column> get columns => [
-        Column.index(),
-        Column.integer('from_client_id'),
-        Column.integer('to_client_id'),
-        Column.text('details').setDefault('{}'),
-        Column.text('images').setDefault('[]'),
-        Column.dateTime('created_at').autoIncrement(),
+  List<TableColumn> get columns => [
+        TableColumn.index(),
+        TableColumn.integer('trip_id'),
+        TableColumn.integer('from_client_id'),
+        TableColumn.integer('to_client_id'),
+        TableColumn.text('details').setDefault('{}'),
+        TableColumn.text('images').setDefault('[]'),
+        TableColumn.dateTime('created_at').autoIncrement(),
       ];
 }

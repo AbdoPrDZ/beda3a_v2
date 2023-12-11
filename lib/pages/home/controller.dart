@@ -1,27 +1,37 @@
-import 'package:beda3a_v2/src/models/models.dart';
 import 'package:get/get.dart';
 
 import '../../services/main.service.dart';
-import '../../src/consts/costs.dart';
-import '../../src/utils/utils.dart';
-import '../../src/views/views.dart';
+import '../../src/src.dart';
 
 class HomeController extends GetxController {
   MainService mainService = Get.find();
 
-  UserCollection? user;
+  UserCollection? get user => mainService.realUser;
 
   PageController pageController = PageController();
 
   int currentTabIndex = 0;
 
+  int? selectedTruckId;
+  Map<int, TruckCollection> trucks = {};
+
   @override
-  onInit() {
-    mainService.realUser?.then((user) {
-      this.user = user;
-      update();
-    });
-    super.onInit();
+  void onReady() {
+    getTrucks();
+    super.onReady();
+  }
+
+  getTrucks() async {
+    trucks = {
+      for (TruckCollection truck in await TruckModel.all()) truck.id: truck
+    };
+    if (!trucks.containsKey(selectedTruckId)) selectedTruckId = null;
+    update();
+  }
+
+  selectTruck(int? id) {
+    selectedTruckId = id;
+    update();
   }
 
   Future logout() async {

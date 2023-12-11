@@ -6,14 +6,14 @@ class SettingMigration extends Migration<SettingCollection> {
   String get name => 'settings';
 
   @override
-  List<Column> get columns => [
-        Column.string('name').primary(),
-        Column.text('value').nullable(),
-        Column.dateTime('created_at').autoIncrement(),
+  List<TableColumn> get columns => [
+        TableColumn.string('name').primary(),
+        TableColumn.text('value').nullable(),
+        TableColumn.dateTime('created_at').autoIncrement(),
       ];
 
   @override
-  List<Future<SettingCollection?>> setupCollections() => [
+  List<Future<SettingCollection?>> get setupCollections => [
         SettingModel.create<String>(name: 'theme', value: 'light'),
         SettingModel.create<String>(name: 'language', value: 'en'),
         SettingModel.create<Map>(name: 'user', value: {

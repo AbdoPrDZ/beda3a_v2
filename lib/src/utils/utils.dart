@@ -1,15 +1,19 @@
 import 'dart:convert';
 
-export 'database/database.dart';
+export 'database/app_database.dart';
 export 'm_datetime.dart';
 export 'size_config.dart';
 export 'route_manager.dart';
 export 'page_info.dart';
-export 'page.dart';
+export 'm_page.dart';
+export 'bloc_widget.dart';
+export 'bloc_page.dart';
+export 'cubit_widget.dart';
+export 'cubit_page.dart';
 export 'create_edit_page_data.dart';
 export 'create_edit_model_result.dart';
 
-String jsonEncode(Object object) =>
+String mJsonEncode(Object object) =>
     const JsonEncoder.withIndent('  ').convert(object);
 
 String getNameSymbols(String name, {String? splitter, String joiner = ''}) {

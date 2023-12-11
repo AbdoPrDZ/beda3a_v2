@@ -1,48 +1,48 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../src/consts/costs.dart';
-import '../../../../src/models/models.dart';
-import '../../../../src/utils/utils.dart' as utils;
-import '../../../../src/views/views.dart';
-import 'controller.dart';
+import '../../../../src/src.dart';
+import 'bloc/payloads_bloc.dart';
 
-class PayloadsTab extends utils.Page<PayloadsTabController> {
+class PayloadsTab extends BlocPage<PayloadsBloc, PayloadsEvent, PayloadsState> {
   PayloadsTab({Key? key})
-      : super(controller: PayloadsTabController(), key: key);
+      : super(
+          key: key,
+          getBloc: (context) => PayloadsBloc(),
+        );
+
+  final searchController = TextEditController();
 
   @override
-  PayloadsTabController get controller => super.controller!;
-
-  // static Widget floatingActionButton(BuildContext context) =>
-  //     FloatingActionButton(
-  //       backgroundColor: UIThemeColors.iconBg,
-  //       onPressed: () => utils.RouteManager.to(PagesInfo.createEditPayload),
-  //       child: const Icon(Icons.apps),
-  //     );
-
-  @override
-  Widget? buildFloatingActionButton(BuildContext context) => Flex(
-        direction: Axis.vertical,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            heroTag: 'create_payload',
-            backgroundColor: UIThemeColors.iconBg,
-            onPressed: controller.createPayload,
-            child: const Icon(Icons.apps),
-          ),
-          const Gap(10),
-          FloatingActionButton(
-            heroTag: 'clear_payloads',
-            backgroundColor: UIThemeColors.danger,
-            onPressed: controller.clearPayloads,
-            child: const Icon(Icons.clear_all),
-          ),
-        ],
+  Widget? buildFloatingActionButton(BuildContext context) =>
+      BlocBuilder<PayloadsBloc, PayloadsState>(
+        builder: (context, state) => Flex(
+          direction: Axis.vertical,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              heroTag: 'create_payload',
+              backgroundColor: UIThemeColors.iconBg,
+              onPressed: () {
+                callEvent(context, CreatePayloadEvent());
+              },
+              child: const Icon(Icons.apps),
+            ),
+            const Gap(10),
+            FloatingActionButton(
+              heroTag: 'clear_payloads',
+              backgroundColor: UIThemeColors.danger,
+              onPressed: () {
+                callEvent(context, ClearPayloadEvent());
+              },
+              child: const Icon(Icons.clear_all),
+            ),
+          ],
+        ),
       );
 
   Widget _buildItem(BuildContext context, PayloadCollection payload) => InkWell(
-        onTap: () => controller.editPayload(payload.id),
+        onTap: () => callEvent(context, EditPayloadEvent(payload.id)),
         child: Container(
           margin: const EdgeInsets.symmetric(
             horizontal: 10,
@@ -51,7 +51,7 @@ class PayloadsTab extends utils.Page<PayloadsTabController> {
           child: Flex(
             direction: Axis.horizontal,
             children: [
-              UserAvatarView.label(utils.getNameSymbols(
+              UserAvatarView.label(getNameSymbols(
                 payload.name,
               )),
               Text.rich(
@@ -84,17 +84,38 @@ class PayloadsTab extends utils.Page<PayloadsTabController> {
   @override
   Widget buildBody(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: SingleChildScrollView(
-          child: StreamBuilder<List<PayloadCollection>>(
-            stream: controller.payloads.stream,
-            builder: (context, snapshot) => Flex(
-              direction: Axis.vertical,
+        child: BlocBuilder<PayloadsBloc, PayloadsState>(
+          builder: (context, state) {
+            if (state is PayloadsInitState) {
+              callEvent(context, GetPayloadsEvent());
+            }
+            return Column(
               children: [
-                for (PayloadCollection payload in snapshot.data ?? [])
-                  _buildItem(context, payload)
+                TextEditView(
+                  controller: searchController,
+                  onSuffixPress: () {
+                    callEvent(
+                      context,
+                      SearchPayloadsEvent(searchController.text),
+                    );
+                  },
+                  suffixIcon: Icons.search,
+                  hint: 'Type to search for payload...',
+                ),
+                SingleChildScrollView(
+                  child: (state is PayloadsLoadedState)
+                      ? Flex(
+                          direction: Axis.vertical,
+                          children: [
+                            for (PayloadCollection payload in state.payloads)
+                              _buildItem(context, payload)
+                          ],
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
               ],
-            ),
-          ),
+            );
+          },
         ),
       );
 }

@@ -6,18 +6,18 @@ class UserMigration extends Migration<UserCollection> {
   String get name => 'users';
 
   @override
-  List<Column> get columns => [
-        Column.index(),
-        Column.string('first_name'),
-        Column.string('last_name'),
-        Column.string('phone').setLength(20),
-        Column.string('email').setLength(50).nullable(),
-        Column.string('address').setLength(50).nullable(),
-        Column.string('company').setLength(50).nullable(),
-        Column.check('gender', ['male', 'female']).setDefault('male'),
-        Column.text('details').setDefault('{}'),
-        Column.text('images').setDefault('[]'),
-        Column.dateTime('created_at').autoIncrement(),
+  List<TableColumn> get columns => [
+        TableColumn.index(),
+        TableColumn.string('first_name'),
+        TableColumn.string('last_name'),
+        TableColumn.string('phone').setLength(20),
+        TableColumn.string('email').setLength(50).nullable(),
+        TableColumn.string('address').setLength(50).nullable(),
+        TableColumn.string('company').setLength(50).nullable(),
+        TableColumn.check('gender', ['male', 'female']).setDefault('male'),
+        TableColumn.text('details').setDefault('{}'),
+        TableColumn.text('images').setDefault('[]'),
+        TableColumn.dateTime('created_at').autoIncrement(),
       ];
 
   // @override

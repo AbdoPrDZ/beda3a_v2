@@ -7,13 +7,14 @@ import 'package:get/get.dart';
 // import 'package:map_location_picker/map_location_picker.dart';
 
 import '../consts/costs.dart';
-import '../utils/utils.dart' as utils;
+import '../utils/utils.dart';
 
 class TextEditView extends StatefulWidget {
   final TextEditController? controller;
   final Function(String)? onChanged;
   final Function(String)? onSubmitted;
   final Function(String?)? onSaved;
+  final Function()? onEditingComplete;
   final List<TextInputFormatter> inputFormatter;
   final String? initialValue;
   final TextCapitalization textCapitalization;
@@ -29,6 +30,7 @@ class TextEditView extends StatefulWidget {
   final double? width, height, maxWidth, maxHeight;
   final Color? backgroundColor;
   final IconData? prefixIcon, suffixIcon;
+  final Function()? onPrefixPress, onSuffixPress;
   final bool multiLine;
   final DateTime? firstDate, lastDate;
 
@@ -38,6 +40,7 @@ class TextEditView extends StatefulWidget {
     this.onChanged,
     this.onSubmitted,
     this.onSaved,
+    this.onEditingComplete,
     this.inputFormatter = const [],
     this.initialValue,
     this.autofocus = false,
@@ -58,6 +61,8 @@ class TextEditView extends StatefulWidget {
     this.backgroundColor,
     this.prefixIcon,
     this.suffixIcon,
+    this.onPrefixPress,
+    this.onSuffixPress,
     this.multiLine = false,
     this.firstDate,
     this.lastDate,
@@ -77,7 +82,7 @@ class TextEditView extends StatefulWidget {
 class _TextEditViewState extends State<TextEditView> {
   final LayerLink _layerLink = LayerLink();
   late TextEditController _controller;
-  bool _hasOpenedOverlay = false;
+  // bool _hasOpenedOverlay = false;
   // OverlayEntry? _overlayEntry;
   // Iterable<String> _suggestions = [];
   // Timer? _debounce;
@@ -107,15 +112,15 @@ class _TextEditViewState extends State<TextEditView> {
     _controller =
         widget.controller ?? TextEditController(text: widget.initialValue);
 
-    // _controller.addListener(() {
-    //   updateSuggestions(_controller.text);
-    //   _currentState?.didChange(_controller.text);
-    // });
+    _controller.addListener(() {
+      //   updateSuggestions(_controller.text);
+      _currentState?.didChange(_controller.text);
+    });
   }
 
   void pickDate() async {
     DateTime initialDateTIme =
-        utils.MDateTime.fromString(_controller.text) ?? DateTime.now();
+        MDateTime.fromString(_controller.text) ?? DateTime.now();
     DateTime? date = await Get.dialog(DatePickerDialog(
       initialDate: initialDateTIme,
       firstDate: widget.firstDate!,
@@ -124,10 +129,10 @@ class _TextEditViewState extends State<TextEditView> {
     TimeOfDay? time = await Get.dialog(TimePickerDialog(
       initialTime: TimeOfDay.fromDateTime(initialDateTIme),
     ));
-    utils.MDateTime dateTime = utils.MDateTime.fromDateAndTImeOfDay(
+    MDateTime dateTime = MDateTime.fromDateAndTImeOfDay(
       date ?? initialDateTIme,
       time ?? TimeOfDay.fromDateTime(initialDateTIme),
-      format: 'yyyy-MM-dd HH:mm',
+      format: 'yyyy-MM-dd HH:mm:ss',
     );
     _controller.text = '$dateTime';
   }
@@ -224,6 +229,28 @@ class _TextEditViewState extends State<TextEditView> {
 
   FormFieldState<String>? _currentState;
 
+  TextButton _buildIconButton(
+    BuildContext context, {
+    required IconData icon,
+    Color? color,
+    Function()? onPressed,
+  }) =>
+      TextButton(
+        style: ButtonStyle(
+          shape: MaterialStateProperty.resolveWith(
+            (states) => RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+          ),
+        ),
+        onPressed: onPressed,
+        child: Icon(
+          icon,
+          color: color,
+          size: 25,
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     if (widget.multiLine) _keyboardType = TextInputType.multiline;
@@ -260,8 +287,7 @@ class _TextEditViewState extends State<TextEditView> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      for (Widget Function(BuildContext context) action
-                          in widget.labelActions!)
+                      for (final action in widget.labelActions!)
                         action(context),
                     ],
                   )
@@ -279,6 +305,7 @@ class _TextEditViewState extends State<TextEditView> {
               CompositedTransformTarget(
                 link: _layerLink,
                 child: TextField(
+                  onEditingComplete: widget.onEditingComplete,
                   focusNode: _focusNode,
                   obscureText: _hideText,
                   controller: _controller,
@@ -305,57 +332,55 @@ class _TextEditViewState extends State<TextEditView> {
                     fillColor: widget.backgroundColor ?? UIThemeColors.fieldBg,
                     filled: true,
                     prefixIcon: widget.prefixIcon != null
-                        ? Icon(
-                            widget.prefixIcon,
-                            color: _isFocused
-                                ? UIThemeColors.fieldFocus
-                                : UIThemeColors.field,
-                          )
+                        ? (widget.onPrefixPress != null
+                            ? _buildIconButton(
+                                context,
+                                onPressed: widget.onPrefixPress,
+                                icon: widget.prefixIcon!,
+                                color: _isFocused
+                                    ? UIThemeColors.fieldFocus
+                                    : UIThemeColors.field,
+                              )
+                            : Icon(
+                                widget.prefixIcon,
+                                color: _isFocused
+                                    ? UIThemeColors.fieldFocus
+                                    : UIThemeColors.field,
+                              ))
                         : null,
                     suffixIcon: widget.suffixIcon != null
-                        ? Icon(
-                            widget.suffixIcon,
-                            color: UIThemeColors.field,
-                          )
+                        ? (widget.onSuffixPress != null
+                            ? _buildIconButton(
+                                context,
+                                onPressed: widget.onSuffixPress,
+                                icon: widget.suffixIcon!,
+                                color: UIThemeColors.field,
+                              )
+                            : Icon(
+                                widget.suffixIcon,
+                                color: UIThemeColors.field,
+                              ))
                         : _keyboardType == TextInputType.visiblePassword
-                            ? TextButton(
-                                style: ButtonStyle(
-                                  shape: MaterialStateProperty.resolveWith(
-                                    (states) => RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                  ),
-                                ),
+                            ? _buildIconButton(
+                                context,
+                                icon: _hideText
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
                                 onPressed: () => setState(() {
                                   _hideText = !_hideText;
                                 }),
-                                child: Icon(
-                                  _hideText
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: _hideText
-                                      ? UIThemeColors.field
-                                      : UIThemeColors.fieldFocus,
-                                  size: 25,
-                                ),
+                                color: _hideText
+                                    ? UIThemeColors.field
+                                    : UIThemeColors.fieldFocus,
                               )
                             : _keyboardType == TextInputType.datetime
-                                ? TextButton(
-                                    style: ButtonStyle(
-                                      shape: MaterialStateProperty.resolveWith(
-                                        (states) => RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                        ),
-                                      ),
-                                    ),
+                                ? _buildIconButton(
+                                    context,
                                     onPressed: pickDate,
-                                    child: Icon(
-                                      Icons.calendar_month_outlined,
-                                      color: UIThemeColors.fieldFocus,
-                                      size: 25,
-                                    ),
+                                    icon: Icons.calendar_month_outlined,
+                                    color: UIThemeColors.fieldFocus,
                                   )
+
                                 // : _keyboardType == TextInputType.streetAddress
                                 //     ? TextButton(
                                 //         style: ButtonStyle(
@@ -447,16 +472,16 @@ class _TextEditViewState extends State<TextEditView> {
       // if (_overlayEntry != null) _overlayEntry!.dispose();
 
       // if (_debounce != null) _debounce?.cancel();
-      // if (widget.focusNode == null) {
-      //   _focusNode.removeListener(() {
-      //     if (_focusNode.hasFocus) {
-      //       openOverlay();
-      //     } else {
-      //       closeOverlay();
-      //     }
-      //   });
-      //   _focusNode.dispose();
-      // }
+      if (widget.focusNode == null) {
+        // _focusNode.removeListener(() {
+        //   if (_focusNode.hasFocus) {
+        //     openOverlay();
+        //   } else {
+        //     closeOverlay();
+        //   }
+        // });
+        _focusNode.dispose();
+      }
       // _controller.removeListener(() => updateSuggestions(_controller.text));
       _controller.dispose();
     } catch (e) {
